@@ -39,3 +39,51 @@ nav ul li a:hover {
     color: var(--chiarissimissimohover);
     font-size: 1.1rem;
 }
+/* MENÙ A TENDINA */
+.dropdown {
+    position: relative;
+}
+
+.dropdown input[type="checkbox"] {
+    display: none;
+}
+
+.dropdown-btn {
+    cursor: pointer;
+    color: var(--chiarissimissimo);
+    font-family: futura-pt, sans-serif;
+    transition: color 0.3s ease;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 120%;
+    left: 0;
+    background-color: var(--scurissimo);
+    list-style: none;
+    padding: 0.5rem 0;
+    margin: 0;
+    min-width: 220px;
+    border-radius: 8px;
+    display: none;
+    z-index: 1000;
+}
+
+.dropdown input[type="checkbox"]:checked ~ .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu li a {
+    white-space: nowrap;
+}
+
+.dropdown-menu {
+    min-width: 250px;
+}
+
+.dropdown-btn:hover {
+    color: var(--chiarissimissimohover);
+    transition: ease-in-out 0.3s;
+    font-size: 1.1rem;
+}
+
