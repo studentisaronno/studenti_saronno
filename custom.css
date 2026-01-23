@@ -39,3 +39,59 @@ nav ul li a:hover {
     color: var(--chiarissimissimohover);
     font-size: 1.1rem;
 }
+/* MENÙ A TENDINA */
+.dropdown {
+    position: relative;
+    display: inline-block; 
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-btn {
+    cursor: pointer;
+    color: var(--chiarissimissimo);
+    font-family: futura-pt, sans-serif;
+    transition: color 0.3s ease, font-size 0.3s ease;
+}
+
+.dropdown-btn:hover {
+    color: var(--chiarissimissimohover);
+    font-size: 1.1rem;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 120%;           
+    left: 50%;           
+    transform: translateX(-50%);
+    background-color: var(--scurissimo);
+    list-style: none;
+    padding: 0.5rem 0;
+    margin: 0;
+    min-width: 250px;
+    border-radius: 8px;
+    display: none;  
+    z-index: 1000;
+}
+
+.dropdown-menu li {
+    display: block; 
+    margin: 0;
+}
+
+.dropdown-menu li a {
+    display: block;
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
+    color: var(--chiarissimissimo);
+    text-decoration: none;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.dropdown-menu li a:hover {
+    color: var(--chiarissimissimohover);
+    background-color: rgba(255,255,255,0.05);
+}
+
