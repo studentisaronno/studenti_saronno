@@ -1,58 +1,61 @@
 /* Header */
 header {
-    background-color: var(--scurissimo);
+    background-color: var(--bianco);
     color: var(--chiarissimo);
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
+    height: 10vh;
 }
 
 .header-left img {
     width: 3em;
 }
 
-nav ul {
+.header-right {
+    margin-left: 5em;
+}
+
+.header-right nav {
+}
+
+.header-right nav > ul {
+    display: flex;
+    gap: 2em;
+}
+
+.header-right nav > ul li {
     list-style: none;
-    padding: 0;
-    margin: 0;
-    min-width: 80%;
 }
 
-nav ul li {
-    display: inline;
-    margin: 0 3.8em;
-}
-
-nav ul li a {
-    color: var(--chiarissimissimo);
+.header-right nav > ul li a {
+    color: var(--nero-blu);
     text-decoration: none;
-    font-family: futura-pt;
+    font-family: "futura-pt", sans-serif;
+    font-weight: 500;
 }
 
-nav ul li a {
+.header-right nav > ul li a {
     transition: ease-in-out 0.3s;
 }
 
-nav ul li a:hover {
+.header-right nav > ul li a:hover {
     transition: ease-in-out 0.3s;
     color: var(--chiarissimissimohover);
     font-size: 1.1rem;
 }
+
 /* MENÙ A TENDINA */
 .dropdown {
     position: relative;
     display: inline-block;
 }
 
-.dropdown:hover .dropdown-menu {
-    display: block;
-}
-
 .dropdown-btn {
     cursor: pointer;
-    color: var(--chiarissimissimo);
-    font-family: futura-pt, sans-serif;
+    color: var(--nero-blu);
+    font-family: "futura-pt", sans-serif;
     transition:
         color 0.3s ease,
         font-size 0.3s ease;
@@ -63,7 +66,21 @@ nav ul li a:hover {
     font-size: 1.1rem;
 }
 
+.dropdown:hover .dropdown-menu {
+    display: block !important;
+}
+
 .dropdown-menu {
+    display: none !important;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+
+/* .dropdown-menu:hover {
     position: absolute;
     top: 100%;
     left: 50%;
@@ -76,15 +93,15 @@ nav ul li a:hover {
     border-radius: 8px;
     display: none;
     z-index: 1000;
-}
+} */
 
 .dropdown-menu li {
-    display: block;
-    margin: 0;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
 }
 
 .dropdown-menu li a {
-    display: block;
     padding: 0.5rem 1rem;
     white-space: nowrap;
     color: var(--chiarissimissimo);
