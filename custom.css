@@ -17,9 +17,6 @@ header {
     margin-left: 5em;
 }
 
-.header-right nav {
-}
-
 .header-right nav > ul {
     display: flex;
     gap: 2em;
