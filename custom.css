@@ -33,14 +33,9 @@ header {
     font-weight: 500;
 }
 
-.header-right > nav > ul li a {
-    /* transition: ease-in-out 0.3s; */
-}
-
 .header-right > nav > ul li a:hover {
     transition: ease-in-out 0.3s;
     color: var(--scurissimo);
-    /* font-size: 1.1rem; */
 }
 
 /* MENÙ A TENDINA */
@@ -53,14 +48,10 @@ header {
     cursor: pointer;
     color: var(--nero-blu);
     font-family: "futura-pt", sans-serif;
-    /* transition:
-        color 0.3s ease; */
-        /* font-size 0.3s ease; */
 }
 
 .dropdown-btn:hover {
     color: var(--chiarissimissimohover);
-    /* font-size: 1.1rem; */
 }
 
 .dropdown:hover .dropdown-menu {
@@ -97,4 +88,17 @@ header {
         color: var(--scurissimo);
         transition: color 0.2 ease-in-out;
     }
+}
+
+
+/* Footer */
+footer {
+    width: 100vw;
+    height: 2em;
+    color: var(--nero-blu);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bianco);
 }
