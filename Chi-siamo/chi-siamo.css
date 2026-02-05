@@ -1,0 +1,12 @@
+.chi-siamo-div {
+    margin: 2rem;
+    margin-left: 6rem;
+    margin-right: 6rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.chi-siamo-div h1 {
+    margin-bottom: 1rem;
+}

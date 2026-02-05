@@ -1,12 +1,12 @@
 :root {
     --nero-blu: #121718;
-    --scurissimo: #0B515F;
-    --scuro: #  ;
-    --medio: #25C5E5;
-    --chiaro: #8DE1F2;
-    --chiarissimo: #B9ECF7;
-    --chiarissimissimo: #EDFAFD;
-    --chiarissimissimissimohover : #dbdbdb;
+    --scurissimo: #0b515f;
+    --scuro: #;
+    --medio: #25c5e5;
+    --chiaro: #8de1f2;
+    --chiarissimo: #b9ecf7;
+    --chiarissimissimo: #edfafd;
+    --chiarissimissimissimohover: #dbdbdb;
     --bianco: #efefef;
     --bianco-scuro: #e3e3e3;
 }
@@ -44,7 +44,7 @@ header {
     list-style: none;
 }
 
-.header-right > nav > ul li  a {
+.header-right > nav > ul li a {
     color: var(--nero-blu);
     text-decoration: none;
     font-family: "futura-pt", sans-serif;
@@ -81,12 +81,12 @@ header {
     position: absolute;
     padding-inline-start: 0;
     background-color: var(--bianco);
-    box-shadow: 2px 16px 16px 0px rgba(0,0,0,0.075);
+    box-shadow: 2px 16px 16px 0px rgba(0, 0, 0, 0.075);
     z-index: 1;
     translate: -1rem;
     border-radius: 8px;
-    padding: .3em   ;
-    padding-top: .5em;
+    padding: 0.3em;
+    padding-top: 0.5em;
 }
 
 .dropdown-menu li {
@@ -108,7 +108,6 @@ header {
     }
 }
 
-
 /* Footer */
 footer {
     width: 80vw;
@@ -128,4 +127,21 @@ footer {
 
 footer > div > a {
     margin: 10em;
+}
+
+/* titolo */
+.titolo {
+    font-family: "eight-semi-condensed", sans-serif;
+    font-weight: 200;
+    font-style: normal;
+    font-size: clamp(3rem, 11vw, 100rem);
+    color: var(--nero-blu);
+    margin-top: 0;
+}
+
+.testo {
+    font-family: "futura-pt", sans-serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: var(--nero-blu);
 }

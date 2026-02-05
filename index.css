@@ -7,16 +7,10 @@
 }
 
 .benvenuti {
-    font-family: "eight-semi-condensed", sans-serif;
-    font-weight: 200;
-    font-style: normal;
-    font-size: clamp(3rem, 11vw, 100rem);
-    margin: 0;
     margin-bottom: -0.8em;
-    color: var(--nero-blu);
 }
 
 .home-div img {
-    margin: 0; 
-    width: 75%
+    margin: 0;
+    width: 75%;
 }
