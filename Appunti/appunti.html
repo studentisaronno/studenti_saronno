@@ -21,6 +21,40 @@
             <h1 class="titolo">Appunti</h1>
         </div>
 
+        <input type="file" id="fileInput">
+<button onclick="upload()">Carica</button>
+<div id="result"></div>
+
         <div id="footer"></div>
     </body>
+    <script>
+async function upload() {
+    const file = document.getElementById("fileInput").files[0];
+    if (!file) return alert("Seleziona un file");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const resultDiv = document.getElementById("result");
+    resultDiv.textContent = "Upload in corso...";
+
+    try {
+        const response = await fetch("/upload", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            resultDiv.innerHTML = `Upload completato: <a href="${data.link}" target="_blank">${data.link}</a>`;
+        } else {
+            resultDiv.textContent = "Upload fallito!";
+        }
+    } catch (err) {
+        console.error(err);
+        resultDiv.textContent = "Errore durante l'upload!";
+    }
+}
+</script>
 </html>
