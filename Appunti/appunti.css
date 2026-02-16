@@ -1,0 +1,12 @@
+.appunti-div {
+    margin: 2rem;
+    margin-left: 10rem;
+    margin-right: 10rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.appunti-div h1 {
+    margin-bottom: 1rem;
+}
