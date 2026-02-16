@@ -1,60 +1,62 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Studenti saronnesi</title>
-        <link rel="icon" type="image/x-icon" href="../imgs/Risorsa 8.png" />
-        <link rel="stylesheet" href="appunti.css" />
-        <!--FUTURA-->
-        <link rel="stylesheet" href="https://use.typekit.net/cjq4cdm.css" />
-        <link rel="stylesheet" href="../root.css" />
-    
-        <script src="../index.js"></script>
 
-    </head>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Studenti saronnesi</title>
+    <link rel="icon" type="image/x-icon" href="../imgs/Risorsa 8.png" />
+    <link rel="stylesheet" href="appunti.css" />
+    <!--FUTURA-->
+    <link rel="stylesheet" href="https://use.typekit.net/cjq4cdm.css" />
+    <link rel="stylesheet" href="../root.css" />
 
-    <body style="margin: 0;">
-        <div id="header"></div>
+    <script src="../index.js"></script>
 
-        <div class="appunti-div">
-            <h1 class="titolo">Appunti</h1>
-        </div>
+</head>
 
-        <input type="file" id="fileInput">
-<button onclick="upload()">Carica</button>
-<div id="result"></div>
+<body style="margin: 0;">
+    <div id="header"></div>
 
-        <div id="footer"></div>
-    </body>
-            <script>
-async function upload() {
-    const file = document.getElementById("fileInput").files[0];
-    if (!file) return alert("Seleziona un file");
+    <div class="appunti-div">
+        <h1 class="titolo">Appunti</h1>
+    </div>
 
-    const formData = new FormData();
-    formData.append("file", file);
+    <input type="file" id="fileInput">
+    <button onclick="upload()">Carica</button>
+    <div id="result"></div>
 
-    const resultDiv = document.getElementById("result");
-    resultDiv.textContent = "Upload in corso...";
+    <div id="footer"></div>
+</body>
+<script>
+    async function upload() {
+        const file = document.getElementById("fileInput").files[0];
+        if (!file) return alert("Seleziona un file");
 
-    try {
-        const response = await fetch("/upload", {
-            method: "POST",
-            body: formData
-        });
+        const formData = new FormData();
+        formData.append("file", file);
 
-        const data = await response.json();
+        const resultDiv = document.getElementById("result");
+        resultDiv.textContent = "Upload in corso...";
 
-        if (data.success) {
-            resultDiv.innerHTML = `Upload completato: <a href="${data.link}" target="_blank">${data.link}</a>`;
-        } else {
-            resultDiv.textContent = "Upload fallito!";
+        try {
+            const response = await fetch("/upload", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                resultDiv.innerHTML = `Upload completato: <a href="${data.link}" target="_blank">${data.link}</a>`;
+            } else {
+                resultDiv.textContent = "Upload fallito!";
+            }
+        } catch (err) {
+            console.error(err);
+            resultDiv.textContent = "Errore durante l'upload!";
         }
-    } catch (err) {
-        console.error(err);
-        resultDiv.textContent = "Errore durante l'upload!";
     }
-}
 </script>
+
 </html>
