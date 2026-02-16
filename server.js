@@ -19,7 +19,7 @@ const upload = multer({ dest: tempDir });
 // Connetti a MEGA (usa variabili ambiente per sicurezza!)
 const storage = await new Storage({
     email: 'studentisaronno@gmail.com',
-    password: 'Studenti_Saronno2026!'
+    password: 'Studenti_Saronno2026'
 }).ready;
 
 console.log("Connesso a MEGA");
