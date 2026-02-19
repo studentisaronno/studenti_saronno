@@ -66,26 +66,58 @@
             <a href="#">Richieste</a>
         </div>
 
-        <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@1/web/uc-file-uploader-regular.min.css" />
-        <script type="module">
-            import * as UC from "https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@1/web/uc-file-uploader-regular.min.js";
-            UC.defineComponents(UC);
-        </script>
+<input type="file" id="fileInput">
+    <button onclick="upload()">Carica</button>
 
-        <uc-config
-            ctx-name="my-uploader"
-            source-list="local, camera, facebook, gdrive"
-            cdn-cname="https://4jzuykndqt.ucarecd.net/"
-            pubkey="5d17d1b4539b6db92808"></uc-config>
+    <h3>I tuoi file (puoi eliminarli)</h3>
+    <ul id="myList"></ul>
 
-        <uc-file-uploader-regular
-            ctx-name="my-uploader"
-            class="uc-light"></uc-file-uploader-regular>
-
-        <uc-upload-ctx-provider ctx-name="my-uploader"></uc-upload-ctx-provider>
+    
 
         <div id="footer"></div>
+    
+    
+        
     </body>
+<script>
+
+        console.log(window.location.pathname);
+
+        async function upload() {
+            const file = document.getElementById("fileInput").files[0];
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("description", "ciao");
+
+            const response = await fetch("/upload", { method: "POST", body: formData });
+            const data = await response.json();
+
+            if (data.success) {
+                // Salva localmente per permettere l'eliminazione
+                let myFiles = JSON.parse(localStorage.getItem('myFiles') || '[]');
+                myFiles.push({ name: file.name, messageId: data.message_id });
+                localStorage.setItem('myFiles', JSON.stringify(myFiles));
+                renderFiles();
+            }
+        }
+
+        async function deleteFile(messageId) {
+            const response = await fetch(`/delete/${messageId}`, { method: "DELETE" });
+            if (response.ok) {
+                let myFiles = JSON.parse(localStorage.getItem('myFiles')).filter(f => f.messageId != messageId);
+                localStorage.setItem('myFiles', JSON.stringify(myFiles));
+                renderFiles();
+            }
+        }
+
+        function renderFiles() {
+            const list = document.getElementById("myList");
+            const myFiles = JSON.parse(localStorage.getItem('myFiles') || '[]');
+            list.innerHTML = myFiles.map(f => `
+        <li>${f.name} <button onclick="deleteFile(${f.messageId})">Elimina</button></li> ${f.caption}
+    `).join('');
+        }
+        renderFiles();
+    </script>
+    
 </html>

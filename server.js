@@ -11,6 +11,7 @@ app.use(express.static(path.join(process.cwd(), ".")));
 app.use(express.json());
 app.use(cors());
 
+
 const upload = multer({ dest: "tmp/" });
 
 // Inserisci qui i tuoi dati (o usa le variabili d'ambiente su Koyeb)
@@ -64,6 +65,12 @@ app.delete("/delete/:messageId", async (req, res) => {
         res.status(500).json({ success: false });
     }
 });
+
+
+app.get("/", (req, res) => {
+    res.sendFile(path.join(process.cwd(), "html", "index.html"));
+});
+
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT);

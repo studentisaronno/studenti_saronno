@@ -31,19 +31,19 @@ console.log(window.location.pathname);
 
 */
 
-// var headerPath =
-//     window.location.pathname === "/index.html"
-//         ? "./header.html"
-//         : "../header.html";
-// var footerPath =
-//     window.location.pathname === "/index.html"
-//         ? "./footer.html"
-//         : "../footer.html";
+var headerPath =
+    window.location.pathname === "/"
+        ? "./html/header.html"
+        : "header.html";
+var footerPath =
+    window.location.pathname === "/index.html"
+        ? "./html/footer.html"
+        : "footer.html";
 
-// console.log(window.location.pathname)
+console.log(window.location.pathname)
 
-const headerPath = "./header.html";
-const footerPath = "./footer.html";
+// const headerPath = "./html/header.html";
+// const footerPath = "./html/footer.html";
 
 var header = fetch(headerPath)
     .then((response) => response.text())
@@ -64,3 +64,5 @@ Promise.all([header, footer])
     .catch((error) => {
         console.error("Errore nel caricamento di Header o Footer:", error);
     });
+
+console.log(window.location.pathname);
