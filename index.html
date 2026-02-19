@@ -63,6 +63,49 @@
 
         <div id="footer"></div>
 
+        <input type="file" id="fileInput">
+<button onclick="upload()">Carica</button>
+
+<h3>I tuoi file (puoi eliminarli)</h3>
+<ul id="myList"></ul>
+
+<script>
+async function upload() {
+    const file = document.getElementById("fileInput").files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("description", "ciao");
+
+    const response = await fetch("/upload", { method: "POST", body: formData });
+    const data = await response.json();
+
+    if (data.success) {
+        // Salva localmente per permettere l'eliminazione
+        let myFiles = JSON.parse(localStorage.getItem('myFiles') || '[]');
+        myFiles.push({ name: file.name, messageId: data.message_id });
+        localStorage.setItem('myFiles', JSON.stringify(myFiles));
+        renderFiles();
+    }
+}
+
+async function deleteFile(messageId) {
+    const response = await fetch(`/delete/${messageId}`, { method: "DELETE" });
+    if (response.ok) {
+        let myFiles = JSON.parse(localStorage.getItem('myFiles')).filter(f => f.messageId != messageId);
+        localStorage.setItem('myFiles', JSON.stringify(myFiles));
+        renderFiles();
+    }
+}
+
+function renderFiles() {
+    const list = document.getElementById("myList");
+    const myFiles = JSON.parse(localStorage.getItem('myFiles') || '[]');
+    list.innerHTML = myFiles.map(f => `
+        <li>${f.name} <button onclick="deleteFile(${f.messageId})">Elimina</button></li> ${f.caption}
+    `).join('');
+}
+renderFiles();
+</script>
 
     </body>
 </html>
