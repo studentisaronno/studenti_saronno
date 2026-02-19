@@ -1,22 +1,20 @@
 <!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Studenti saronnesi</title>
+        <link rel="icon" type="image/x-icon" href="../imgs/Risorsa 8.png" />
+        <link rel="stylesheet" href="appunti.css" />
+        <!--FUTURA-->
+        <link rel="stylesheet" href="https://use.typekit.net/cjq4cdm.css" />
+        <link rel="stylesheet" href="../root.css" />
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Studenti saronnesi</title>
-    <link rel="icon" type="image/x-icon" href="../imgs/Risorsa 8.png" />
-    <link rel="stylesheet" href="appunti.css" />
-    <!--FUTURA-->
-    <link rel="stylesheet" href="https://use.typekit.net/cjq4cdm.css" />
-    <link rel="stylesheet" href="../root.css" />
+        <script src="../index.js"></script>
+    </head>
 
-    <script src="../index.js"></script>
-
-</head>
-
-<body style="margin: 0;">
-    <header width="100vw">
+    <body style="margin: 0">
+        <!--<header width="100vw">
         <div class="header-left">
             <img
                 src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.pngplay.com%2Fwp-content%2Fuploads%2F12%2FCircle-Transparent-PNG.png&f=1&nofb=1&ipt=e142e255250d357457c407a9d3f2091c3a718e28e7c39e7922401dc0c9075513" />
@@ -55,37 +53,39 @@
                 </ul>
             </nav>
         </div>
-    </header>
+    </header>-->
+        <div id="header"></div>
 
-    <div class="appunti-div">
-        <h1 class="titolo">Appunti</h1>
-    </div>
+        <div class="appunti-div">
+            <h1 class="titolo">Appunti</h1>
+        </div>
 
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@1/web/uc-file-uploader-regular.min.css"
->
-<script type="module">
-  import * as UC from 'https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@1/web/uc-file-uploader-regular.min.js';
-  UC.defineComponents(UC);
-</script>
+        <div class="tabs-appunti">
+            <a href="#" class="tab-attiva">Cerca</a>
+            <a href="#">Miei appunti</a>
+            <a href="#">Richieste</a>
+        </div>
 
-<uc-config
-  ctx-name="my-uploader"
-  source-list="local, camera, facebook, gdrive"
-  cdn-cname="https://4jzuykndqt.ucarecd.net/"
-  pubkey="5d17d1b4539b6db92808"
-></uc-config>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@1/web/uc-file-uploader-regular.min.css" />
+        <script type="module">
+            import * as UC from "https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@1/web/uc-file-uploader-regular.min.js";
+            UC.defineComponents(UC);
+        </script>
 
-<uc-file-uploader-regular
-  ctx-name="my-uploader"
-  class="uc-light"
-></uc-file-uploader-regular>
+        <uc-config
+            ctx-name="my-uploader"
+            source-list="local, camera, facebook, gdrive"
+            cdn-cname="https://4jzuykndqt.ucarecd.net/"
+            pubkey="5d17d1b4539b6db92808"></uc-config>
 
-<uc-upload-ctx-provider ctx-name="my-uploader"></uc-upload-ctx-provider>
+        <uc-file-uploader-regular
+            ctx-name="my-uploader"
+            class="uc-light"></uc-file-uploader-regular>
 
-    <!-- <div id="footer"></div> -->
-</body>
+        <uc-upload-ctx-provider ctx-name="my-uploader"></uc-upload-ctx-provider>
 
-
+        <div id="footer"></div>
+    </body>
 </html>
