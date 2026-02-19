@@ -25,5 +25,6 @@
   "bugs": {
     "url": "https://github.com/studentisaronno/studenti_saronno/issues"
   },
-  "homepage": "https://github.com/studentisaronno/studenti_saronno#readme"
+  "homepage": "https://github.com/studentisaronno/studenti_saronno#readme",
+  "devDependencies": {}
 }
