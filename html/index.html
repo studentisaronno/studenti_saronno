@@ -4,12 +4,12 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Studenti saronnesi</title>
-        <link rel="icon" type="image/x-icon" href="/imgs/Risorsa 8.png" />
-        <link rel="stylesheet" href="index.css" />
+        <link rel="icon" type="image/x-icon" href="../imgs/Risorsa 8.png" />
+        <link rel="stylesheet" href="../css/index.css" />
         <!--FUTURA-->
         <link rel="stylesheet" href="https://use.typekit.net/cjq4cdm.css" />
-        <link rel="stylesheet" href="root.css" />
-        <script src="index.js"></script>
+        <link rel="stylesheet" href="../css/root.css" />
+        <script src="../js/index.js"></script>
     </head>
 
     <body style="margin: 0">
@@ -162,7 +162,7 @@
         <main>
             <div class="home-div">
                 <h1 class="titolo benvenuti">Benvenuti</h1>
-                <img src="imgs/Studenti.webp" />
+                <img src="../imgs/Studenti.webp" />
             </div>
         </main>
 
@@ -175,6 +175,9 @@
 <ul id="myList"></ul>
 
 <script>
+
+    console.log(window.location.pathname);
+
 async function upload() {
     const file = document.getElementById("fileInput").files[0];
     const formData = new FormData();

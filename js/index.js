@@ -31,14 +31,19 @@ console.log(window.location.pathname);
 
 */
 
-var headerPath =
-    window.location.pathname === "/index.html"
-        ? "./header.html"
-        : "../header.html";
-var footerPath =
-    window.location.pathname === "/index.html"
-        ? "./footer.html"
-        : "../footer.html";
+// var headerPath =
+//     window.location.pathname === "/index.html"
+//         ? "./header.html"
+//         : "../header.html";
+// var footerPath =
+//     window.location.pathname === "/index.html"
+//         ? "./footer.html"
+//         : "../footer.html";
+
+// console.log(window.location.pathname)
+
+const headerPath = "./header.html";
+const footerPath = "./footer.html";
 
 var header = fetch(headerPath)
     .then((response) => response.text())
