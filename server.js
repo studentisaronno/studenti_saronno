@@ -6,70 +6,79 @@ import path from "path";
 import axios from "axios";
 import FormData from "form-data";
 import dotenv from "dotenv";
+import session from "express-session";
 
 dotenv.config();
 
 const app = express();
+app.use(session({
+  secret: `${process.env.SESSION_SECRET}`,
+  resave: false,
+  saveUninitialized: false
+}));
 app.use(express.static(path.join(process.cwd(), ".")));
 app.use(express.json());
 app.use(cors());
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(process.cwd(), "html", "index.html"));
+  res.sendFile(path.join(process.cwd(), "html", "index.html"));
 });
 
 app.get("/auth/google", (req, res) => {
-    const url =
-        "https://accounts.google.com/o/oauth2/v2/auth" +
-        `?client_id=${process.env.GOOGLE_CLIENT_ID}` +
-        `&redirect_uri=${process.env.BASE_URL}/auth/google/callback` +
-        "&response_type=code" +
-        "&scope=openid%20profile%20email";
+  const url =
+    "https://accounts.google.com/o/oauth2/v2/auth" +
+    `?client_id=${process.env.GOOGLE_CLIENT_ID}` +
+    `&redirect_uri=${process.env.BASE_URL}/auth/google/callback` +
+    "&response_type=code" +
+    "&scope=openid%20profile%20email";
 
-    res.redirect(url);
+  res.redirect(url);
 });
 
 let currentUser = null;
 
 app.get("/auth/google/callback", async (req, res) => {
-    const code = req.query.code;
+  const code = req.query.code;
 
-    const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            code: code,
-            client_id: process.env.GOOGLE_CLIENT_ID,
-            client_secret: process.env.GOOGLE_CLIENT_SECRET,
-            redirect_uri: `${process.env.BASE_URL}/auth/google/callback`,
-            grant_type: "authorization_code",
-        }),
-    });
+  const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      code: code,
+      client_id: process.env.GOOGLE_CLIENT_ID,
+      client_secret: process.env.GOOGLE_CLIENT_SECRET,
+      redirect_uri: `${process.env.BASE_URL}/auth/google/callback`,
+      grant_type: "authorization_code",
+    }),
+  });
 
-    const tokenData = await tokenRes.json();
+  const tokenData = await tokenRes.json();
 
-    const accessToken = tokenData.access_token;
+  const accessToken = tokenData.access_token;
 
-    const userRes = await fetch(
-        "https://www.googleapis.com/oauth2/v2/userinfo",
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        },
-    );
+  const userRes = await fetch(
+    "https://www.googleapis.com/oauth2/v2/userinfo",
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
 
-    const user = await userRes.json();
+  const user = await userRes.json();
 
-    currentUser = user;
+  currentUser = user;
 
-    res.redirect(process.env.BASE_URL);
+  res.redirect(process.env.BASE_URL);
 });
 
 app.get("/api/user", (req, res) => {
-    res.json(currentUser);
+  if (!req.session.user) {
+    return res.json(null);
+  }
+  res.json(currentUser);
 });
 
 // const upload = multer({ dest: "tmp/" });
@@ -136,5 +145,5 @@ app.get("/api/user", (req, res) => {
 const PORT = process.env.PORT || 8000;
 app.listen(PORT);
 app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server attivo su http://localhost:${PORT}`);
+  console.log(`Server attivo su http://localhost:${PORT}`);
 });

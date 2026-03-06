@@ -35,6 +35,9 @@ console.log(window.location.pathname);
 fetch("/api/user")
     .then((res) => res.json())
     .then((user) => {
+
+        if (!user) return;
+
         document.getElementById("user-img").src = user.picture;
         console.log(user);
     });
