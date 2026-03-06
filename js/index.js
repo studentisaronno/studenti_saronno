@@ -1,46 +1,11 @@
-/* Questa è un riga di test scritta da Elisa per far vedere ad Alessia come funziona Git */
-
-/* OLD
-
-if (window.location.pathname === "/index.html") {
-    fetch("./header.html")
-        .then((response) => response.text())
-        .then((data) => {
-            document.getElementById("header").innerHTML = data;
-        });
-
-    fetch("./footer.html")
-        .then((response) => response.text())
-        .then((data) => {
-            document.getElementById("footer").innerHTML = data;
-        });
-} else {
-    fetch("../header.html")
-        .then((response) => response.text())
-        .then((data) => {
-            document.getElementById("header").innerHTML = data;
-        });
-
-    fetch("../footer.html")
-        .then((response) => response.text())
-        .then((data) => {
-            document.getElementById("footer").innerHTML = data;
-        });
-}
-console.log(window.location.pathname);
-
-*/
-
 var headerPath =
-    window.location.pathname === "/"
-        ? "./html/header.html"
-        : "header.html";
+    window.location.pathname === "/" ? "./html/header.html" : "header.html";
 var footerPath =
     window.location.pathname === "/index.html"
         ? "./html/footer.html"
         : "footer.html";
 
-console.log(window.location.pathname)
+console.log(window.location.pathname);
 
 // const headerPath = "./html/header.html";
 // const footerPath = "./html/footer.html";
@@ -66,3 +31,10 @@ Promise.all([header, footer])
     });
 
 console.log(window.location.pathname);
+
+fetch("/api/user")
+    .then((res) => res.json())
+    .then((user) => {
+        document.getElementById("user-img").src = user.picture;
+        console.log(user);
+    });

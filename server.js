@@ -19,65 +19,58 @@ app.get("/", (req, res) => {
 });
 
 app.get("/auth/google", (req, res) => {
+    const url =
+        "https://accounts.google.com/o/oauth2/v2/auth" +
+        `?client_id=${process.env.GOOGLE_CLIENT_ID}` +
+        `&redirect_uri=${process.env.BASE_URL}/auth/google/callback` +
+        "&response_type=code" +
+        "&scope=openid%20profile%20email";
 
- const url =
-  "https://accounts.google.com/o/oauth2/v2/auth" +
-  `?client_id=${process.env.GOOGLE_CLIENT_ID}` +
-  `&redirect_uri=${process.env.BASE_URL}/auth/google/callback` +
-  "&response_type=code" +
-  "&scope=openid%20profile%20email"
+    res.redirect(url);
+});
 
- res.redirect(url)
-
-})
+let currentUser = null;
 
 app.get("/auth/google/callback", async (req, res) => {
+    const code = req.query.code;
 
-  const code = req.query.code
+    const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            code: code,
+            client_id: process.env.GOOGLE_CLIENT_ID,
+            client_secret: process.env.GOOGLE_CLIENT_SECRET,
+            redirect_uri: `${process.env.BASE_URL}/auth/google/callback`,
+            grant_type: "authorization_code",
+        }),
+    });
 
-  const tokenRes = await fetch(
-    "https://oauth2.googleapis.com/token",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        code: code,
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET,
-        redirect_uri: `${process.env.BASE_URL}/auth/google/callback`,
-        grant_type: "authorization_code"
-      })
-    }
-  )
+    const tokenData = await tokenRes.json();
 
-  const tokenData = await tokenRes.json()
+    const accessToken = tokenData.access_token;
 
-  const accessToken = tokenData.access_token
+    const userRes = await fetch(
+        "https://www.googleapis.com/oauth2/v2/userinfo",
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        },
+    );
 
+    const user = await userRes.json();
 
-  const userRes = await fetch(
-    "https://www.googleapis.com/oauth2/v2/userinfo",
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    }
-  )
+    currentUser = user;
 
-  const user = await userRes.json()
+    res.redirect(process.env.BASE_URL);
+});
 
-  
-  console.log(user)
-  
-  res.redirect(process.env.BASE_URL)
-
-  console.log(res)
-
-  document.getElementById("profile-img").src = "./imgs/foto_filippo.jpg"
-
-})
+app.get("/api/user", (req, res) => {
+    res.json(currentUser);
+});
 
 // const upload = multer({ dest: "tmp/" });
 
