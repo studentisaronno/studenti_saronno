@@ -7,70 +7,77 @@ import axios from "axios";
 import FormData from "form-data";
 import dotenv from "dotenv";
 
+dotenv.config();
+
 const app = express();
 app.use(express.static(path.join(process.cwd(), ".")));
 app.use(express.json());
 app.use(cors());
 
-const CLIENT_ID = "Ov23ctS7K1fS1qxjnZkK";
-const SECRET_CLIENT_ID = "4b6f7d8e1cb961e2283e98566f5dedf3aef531cd";
-const BASE_URL = "https://studentisaronno.it";
-
 app.get("/", (req, res) => {
     res.sendFile(path.join(process.cwd(), "html", "index.html"));
 });
 
-// redirect to GitHub
-app.get("/auth/github", (req, res) => {
-    const redirect =
-        "https://github.com/login/oauth/authorize" +
-        `?client_id=${CLIENT_ID}` +
-        `&redirect_uri=${BASE_URL}/auth/github/callback` +
-        "&scope=user";
+app.get("/auth/google", (req, res) => {
 
-    res.redirect(redirect);
-});
+ const url =
+  "https://accounts.google.com/o/oauth2/v2/auth" +
+  `?client_id=${process.env.GOOGLE_CLIENT_ID}` +
+  `&redirect_uri=${process.env.BASE_URL}/auth/google/callback` +
+  "&response_type=code" +
+  "&scope=openid%20profile%20email"
 
-// callback
-app.get("/auth/github/callback", async (req, res) => {
-    const code = req.query.code;
-    console.log("Received code:", code);
-    try {
-        // exchange code → access token
-        const tokenResponse = await axios.post(
-            "https://github.com/login/oauth/access_token",
-            {
-                client_id: CLIENT_ID,
-                client_secret: SECRET_CLIENT_ID,
-                code: code,
-            },
-            {
-                headers: { Accept: "application/json" },
-            },
-        );
+ res.redirect(url)
 
-        const accessToken = tokenResponse.data.access_token;
+})
 
-        // get user data
-        const userResponse = await axios.get("https://api.github.com/user", {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
+app.get("/auth/google/callback", async (req, res) => {
 
-        const user = userResponse.data;
+  const code = req.query.code
 
-        res.send(`
-      <h1>Login successful</h1>
-      <img src="${user.avatar_url}" width="100"/>
-      <p>ID: ${user.id}</p>
-      <p>Username: ${user.login}</p>
-    `);
-    } catch (err) {
-        res.status(500).send("OAuth error");
+  const tokenRes = await fetch(
+    "https://oauth2.googleapis.com/token",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        code: code,
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET,
+        redirect_uri: `${process.env.BASE_URL}/auth/google/callback`,
+        grant_type: "authorization_code"
+      })
     }
-});
+  )
 
+  const tokenData = await tokenRes.json()
+
+  const accessToken = tokenData.access_token
+
+
+  const userRes = await fetch(
+    "https://www.googleapis.com/oauth2/v2/userinfo",
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    }
+  )
+
+  const user = await userRes.json()
+
+  
+  console.log(user)
+  
+  res.redirect(process.env.BASE_URL)
+
+  console.log(res)
+
+  document.getElementById("profile-img").src = "./imgs/foto_filippo.jpg"
+
+})
 // const upload = multer({ dest: "tmp/" });
 
 // // Inserisci qui i tuoi dati (o usa le variabili d'ambiente su Koyeb)
