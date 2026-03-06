@@ -1,20 +1,24 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Studenti saronnesi</title>
-        <link rel="icon" type="image/x-icon" href="../imgs/Risorsa 8.png" />
-        <link rel="stylesheet" href="../css/appunti.css" />
-        <!--FUTURA-->
-        <link rel="stylesheet" href="https://use.typekit.net/cjq4cdm.css" />
-        <link rel="stylesheet" href="../css/root.css" />
 
-        <script src="../js/index.js"></script>
-    </head>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Studenti saronnesi</title>
+    <link rel="icon" type="image/x-icon" href="../imgs/Risorsa 8.png" />
+    <link rel="stylesheet" href="../css/appunti.css" />
+    <!--FUTURA-->
+    <link rel="stylesheet" href="https://use.typekit.net/cjq4cdm.css" />
+    <link rel="stylesheet" href="../css/root.css" />
 
-    <body style="margin: 0">
-        <!--<header width="100vw">
+    <script src="../js/index.js"></script>
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@1/web/uc-file-uploader-regular.min.css">
+</head>
+
+<body style="margin: 0">
+    <!--<header width="100vw">
         <div class="header-left">
             <img
                 src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.pngplay.com%2Fwp-content%2Fuploads%2F12%2FCircle-Transparent-PNG.png&f=1&nofb=1&ipt=e142e255250d357457c407a9d3f2091c3a718e28e7c39e7922401dc0c9075513" />
@@ -54,70 +58,37 @@
             </nav>
         </div>
     </header>-->
-        <div id="header"></div>
+    <div id="header"></div>
 
-        <div class="appunti-div">
-            <h1 class="titolo">Appunti</h1>
-        </div>
+    <div class="appunti-div">
+        <h1 class="titolo">Appunti</h1>
+    </div>
 
-        <div class="tabs-appunti">
-            <a href="#" class="tab-attiva">Cerca</a>
-            <a href="#">Miei appunti</a>
-            <a href="#">Richieste</a>
-        </div>
+    <div class="tabs-appunti">
+        <a href="#" class="tab-attiva">Cerca</a>
+        <a href="#">Miei appunti</a>
+        <a href="#">Richieste</a>
+    </div>
 
-<input type="file" id="fileInput">
-    <button onclick="upload()">Carica</button>
 
-    <h3>I tuoi file (puoi eliminarli)</h3>
-    <ul id="myList"></ul>
+    <img id="user-img" width="100px" height="100px" src="" />
 
-    
 
-        <div id="footer"></div>
-    
-    
-        
-    </body>
-<script>
+    <uc-config ctx-name="my-uploader" source-list="local, camera, facebook, gdrive"
+        cdn-cname="https://4jzuykndqt.ucarecd.net/" pubkey="5d17d1b4539b6db92808"></uc-config>
 
-        console.log(window.location.pathname);
+    <uc-file-uploader-regular ctx-name="my-uploader" class="uc-light"></uc-file-uploader-regular>
 
-        async function upload() {
-            const file = document.getElementById("fileInput").files[0];
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("description", "ciao");
+    <uc-upload-ctx-provider ctx-name="my-uploader"></uc-upload-ctx-provider>
 
-            const response = await fetch("/upload", { method: "POST", body: formData });
-            const data = await response.json();
 
-            if (data.success) {
-                // Salva localmente per permettere l'eliminazione
-                let myFiles = JSON.parse(localStorage.getItem('myFiles') || '[]');
-                myFiles.push({ name: file.name, messageId: data.message_id });
-                localStorage.setItem('myFiles', JSON.stringify(myFiles));
-                renderFiles();
-            }
-        }
+    <div id="footer"></div>
 
-        async function deleteFile(messageId) {
-            const response = await fetch(`/delete/${messageId}`, { method: "DELETE" });
-            if (response.ok) {
-                let myFiles = JSON.parse(localStorage.getItem('myFiles')).filter(f => f.messageId != messageId);
-                localStorage.setItem('myFiles', JSON.stringify(myFiles));
-                renderFiles();
-            }
-        }
+</body>
 
-        function renderFiles() {
-            const list = document.getElementById("myList");
-            const myFiles = JSON.parse(localStorage.getItem('myFiles') || '[]');
-            list.innerHTML = myFiles.map(f => `
-        <li>${f.name} <button onclick="deleteFile(${f.messageId})">Elimina</button></li> ${f.caption}
-    `).join('');
-        }
-        renderFiles();
-    </script>
-    
+<script type="module">
+    import * as UC from 'https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@1/web/uc-file-uploader-regular.min.js';
+    UC.defineComponents(UC);
+</script>
+
 </html>

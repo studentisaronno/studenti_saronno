@@ -1,11 +1,6 @@
-fetch('../header.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('header').innerHTML = data;
-        });
-fetch('../footer.html')
-    .then(response => response.text())
-    .then(data => {
-        document.getElementById('footer').innerHTML = data;
+// User data
+fetch("/api/user")
+    .then((res) => res.json())
+    .then((user) => {
+        document.getElementById("user-img").src = user.picture;
     });
-
