@@ -78,6 +78,12 @@ app.get("/auth/google/callback", async (req, res) => {
   document.getElementById("profile-img").src = "./imgs/foto_filippo.jpg"
 
 })
+
+// GOOGLE_CLIENT_ID=1067279279588-g13ekoel3pjh8h14fi98a4d0fvl3p1nq.apps.googleusercontent.com 
+// GOOGLE_CLIENT_SECRET=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
+// BASE_URL=http://localhost:8000
+// JWT_SECRET=supersecret
+
 // const upload = multer({ dest: "tmp/" });
 
 // // Inserisci qui i tuoi dati (o usa le variabili d'ambiente su Koyeb)
