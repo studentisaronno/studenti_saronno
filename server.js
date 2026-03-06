@@ -69,16 +69,17 @@ app.get("/auth/google/callback", async (req, res) => {
 
   const user = await userRes.json();
 
-  currentUser = user;
+  req.session.user = user;
 
   res.redirect(process.env.BASE_URL);
 });
 
 app.get("/api/user", (req, res) => {
+  console.log(req.session.user);
   if (!req.session.user) {
     return res.json(null);
   }
-  res.json(currentUser);
+  res.json(req.session.user);
 });
 
 // const upload = multer({ dest: "tmp/" });
