@@ -5,8 +5,6 @@ var footerPath =
         ? "./html/footer.html"
         : "footer.html";
 
-console.log(window.location.pathname);
-
 // const headerPath = "./html/header.html";
 // const footerPath = "./html/footer.html";
 
