@@ -90,7 +90,7 @@ app.get("/api/user", (req, res) => {
 
 
 //Create the supabase client
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SECRET_URL);
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SECRET_KEY);
 
 ///Sync user to supabase
 async function syncUserToSupabase(googleId, email, name) {
