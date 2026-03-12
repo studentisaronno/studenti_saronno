@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://use.typekit.net/cjq4cdm.css" />
     <link rel="stylesheet" href="../css/root.css" />
 
-    
+
     <script src="../js/header-footer.js"></script>
     <script src="../js/index.js"></script>
 
@@ -20,7 +20,7 @@
 </head>
 
 <body style="margin: 0">
-    
+
     <div id="header"></div>
 
     <div class="appunti-div">
@@ -36,7 +36,7 @@
     <uc-config ctx-name="my-uploader" source-list="local, camera, facebook, gdrive"
         cdn-cname="https://4jzuykndqt.ucarecd.net/" pubkey="5d17d1b4539b6db92808"></uc-config>
 
-    <uc-file-uploader-regular ctx-name="my-uploader" class="uc-light"></uc-file-uploader-regular>
+    <uc-file-uploader-regular id="file-uploader" ctx-name="my-uploader" class="uc-light"></uc-file-uploader-regular>
 
     <uc-upload-ctx-provider ctx-name="my-uploader"></uc-upload-ctx-provider>
 
@@ -47,23 +47,9 @@
 
 <script type="module">
     import * as UC from 'https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@1/web/uc-file-uploader-regular.min.js';
-    UC.defineComponents(UC);
-
-    fetch("/api/user")
-    .then((res) => res.json())
-    .then((user) => {
-        if (user) {
-            
-            const config = document.querySelector("uc-config");
-            config.metadata = {
-                userId: user.id
-            }
-
-        } else {
-            document.getElementById("user-img").src = "../svgs/user.svg";
-        }
-    });
+UC.defineComponents(UC);
 
 </script>
+    <script src="../js/appunti.js"></script>
 
 </html>

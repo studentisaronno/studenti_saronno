@@ -7,6 +7,7 @@ import axios from "axios";
 import FormData from "form-data";
 import dotenv from "dotenv";
 import session from "express-session";
+import { createClient } from "@supabase/supabase-js";
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.get("/auth/google", (req, res) => {
 
 let currentUser = null;
 
+//Google authentication callback
 app.get("/auth/google/callback", async (req, res) => {
   const code = req.query.code;
 
@@ -69,6 +71,9 @@ app.get("/auth/google/callback", async (req, res) => {
 
   const user = await userRes.json();
 
+  //Upload to supabase
+  await syncUserToSupabase(user.id, user.email, user.name);
+
   req.session.user = user;
 
   res.redirect(process.env.BASE_URL);
@@ -80,6 +85,27 @@ app.get("/api/user", (req, res) => {
     return res.json(null);
   }
   res.json(req.session.user);
+});
+
+
+
+//Create the supabase client
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SECRET_URL);
+
+///Sync user to supabase
+async function syncUserToSupabase(googleId, email, name) {
+  const { data, error } = await supabase
+    .from("site_users")
+    .upsert({ google_id: googleId, email: email, display_name: name }, { onConflict: "google_id" })
+    .select();
+
+  if (error) {
+    console.error("Error syncing user to Supabase:", error);
+  }
+}
+
+app.get("/upload/note", (req, res) => {
+  res.json();
 });
 
 const PORT = process.env.PORT || 8000;
