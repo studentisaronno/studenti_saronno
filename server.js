@@ -71,6 +71,8 @@ app.get("/auth/google/callback", async (req, res) => {
 
   const user = await userRes.json();
 
+  currentUser = user;
+
   //Upload to supabase
   await syncUserToSupabase(user.id, user.email, user.name);
 
@@ -104,8 +106,33 @@ async function syncUserToSupabase(googleId, email, name) {
   }
 }
 
-app.get("/upload/note", (req, res) => {
-  res.json();
+app.post("/upload/note", async (req, res) => {
+  const fileUrl = req.body.files;
+
+  console.log("Received file URL:", fileUrl[0]);
+
+  const { data, error } = await supabase
+    .from("notes")
+    .insert({ author_id: currentUser.id, content: fileUrl })
+    .select();
+
+  if (error) {
+    console.error("Error saving note to Supabase:", error);
+  }
+
+});
+
+app.get("/get/notes", async (req, res) => {
+  const { data, error } = await supabase
+    .from("notes")
+    .select('*')
+
+  if (error) {
+    console.error("Error fetching notes from Supabase:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+
+  res.json(data);
 });
 
 const PORT = process.env.PORT || 8000;

@@ -29,16 +29,27 @@
 
     <div class="tabs-appunti">
         <a href="#" class="tab-attiva">Cerca</a>
-        <a href="#">Miei appunti</a>
-        <a href="#">Richieste</a>
+        <a href="#" id="miei-appunti" onclick="getUserNotes()">Miei appunti</a>
+        <a href="#" id="tutti-appunti" onclick="getAllNotes()">Tutti gli appunti</a>
     </div>
 
-    <uc-config ctx-name="my-uploader" source-list="local, camera, facebook, gdrive"
-        cdn-cname="https://4jzuykndqt.ucarecd.net/" pubkey="5d17d1b4539b6db92808"></uc-config>
+    <div class="appunti-div">
+        <div class="appunti" id="lista-appunti">
 
-    <uc-file-uploader-regular id="file-uploader" ctx-name="my-uploader" class="uc-light"></uc-file-uploader-regular>
+        </div> 
+        <div class="appunti-utente"></div>
 
-    <uc-upload-ctx-provider ctx-name="my-uploader"></uc-upload-ctx-provider>
+    </div>
+
+    <div id="file-uploader">
+        <uc-config ctx-name="my-uploader" source-list="local, camera, facebook, gdrive"
+            cdn-cname="https://4jzuykndqt.ucarecd.net/" pubkey="5d17d1b4539b6db92808" confirm-upload="true"></uc-config>
+    
+        <uc-file-uploader-regular id="file-uploader" ctx-name="my-uploader" class="uc-light"></uc-file-uploader-regular>
+    
+        <uc-upload-ctx-provider ctx-name="my-uploader"></uc-upload-ctx-provider>
+    </div>
+
 
 
     <div id="footer"></div>
@@ -46,8 +57,37 @@
 </body>
 
 <script type="module">
-    import * as UC from 'https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@1/web/uc-file-uploader-regular.min.js';
-UC.defineComponents(UC);
+
+  import * as UC from 'https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@1/web/uc-file-uploader-regular.min.js';
+  UC.defineComponents(UC);
+
+  const ctxProvider = document.querySelector("uc-upload-ctx-provider");
+
+  ctxProvider.addEventListener("common-upload-success", (e) => {
+    console.log(
+      "Uploaded files URL list",
+      e.detail.successEntries.map((entry) => entry.cdnUrl)
+    );
+
+    fetch("/upload/note", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            files: e.detail.successEntries.map((entry) => entry.cdnUrl),
+        }),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Success:", data);
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+        });
+    });
+
+
 
 </script>
     <script src="../js/appunti.js"></script>

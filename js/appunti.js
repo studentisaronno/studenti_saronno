@@ -1,19 +1,37 @@
-console.log("Ciao 1");
-
-
-const uploader = document.querySelector('uc-file-uploader-regular');
-uploader.addEventListener('ready', (event) => {
-
-    console.log("Ciao");
-
-    const { success } = event.detail;
-
-    success.forEach(file => {
-        const fileUrl = file.cdnUrl;
-        fetch("/upload/note");
-        console.log('File caricato con successo:', fileUrl);
-
-
+// User data
+fetch("/api/user")
+    .then((res) => res.json())
+    .then((user) => {
+        if (user) {
+            console.log("Show Uploader");
+            document.getElementById("file-uploader").style.visibility = "visible";
+        } else {
+            console.log("Hide Uploader");
+            document.getElementById("file-uploader").style.visibility = "hidden";
+        }
     });
 
-});
+
+
+function getAllNotes() {
+    let allNotes = null;
+    fetch("/get/notes")
+        .then((res) => res.json())
+        .then((notes) => {
+            allNotes = notes;
+            console.log(allNotes);
+
+            let notesList = document.getElementById("lista-appunti");
+            notesList.innerHTML = ""; // Clear existing notes
+            allNotes.forEach(note => {
+                let noteElement = document.createElement("p");
+                noteElement.textContent = note.content;
+                notesList.appendChild(noteElement);
+                console.log(note);
+            });
+
+        });
+
+
+
+}
