@@ -23,35 +23,42 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1em 2em;
-    height: 10vh;
+    padding: 1.5em 4em;
+}
+
+.header-left a {
+    height: auto;
+    align-content: center;
+    display: flex;
 }
 
 .header-left img {
-    width: 3em;
+    height: 2.5rem;
 }
 
 .header-right {
     margin-left: 5em;
 }
 
-.header-right > nav > ul {
+.header-right>nav>ul {
     display: flex;
     gap: 2em;
 }
 
-.header-right > nav > ul li {
+.header-right>nav>ul li {
     list-style: none;
+    align-content: center;
 }
 
-.header-right > nav > ul li a {
+.header-right>nav>ul li a {
     color: var(--nero-blu);
     text-decoration: none;
     font-family: "futura-pt", sans-serif;
     font-weight: 500;
+    font-size: 1.2rem;
 }
 
-.header-right > nav > ul li a:hover {
+.header-right>nav>ul li a:hover {
     transition: ease-in-out 0.3s;
     color: var(--scurissimo);
 }
@@ -83,7 +90,7 @@ header {
     background-color: var(--bianco);
     box-shadow: 2px 16px 16px 0px rgba(0, 0, 0, 0.075);
     z-index: 1;
-    translate: -5rem;
+    translate: -1.25rem;
     border-radius: 8px;
     padding: 0.3em;
     padding-top: 0.5em;
@@ -102,6 +109,7 @@ header {
 .dropdown-menu li:hover {
     background-color: var(--bianco-scuro);
     transition: color 0.2 ease-in-out;
+
     a {
         color: var(--scurissimo);
         transition: color 0.2 ease-in-out;
@@ -122,10 +130,17 @@ footer {
     font-family: "futura-pt", sans-serif;
     font-weight: 300;
     margin: auto;
+    margin-bottom: 2em;
 }
 
-footer > div > a {
-    margin: 10em;
+footer>div {
+    display: flex;
+    gap: 2em;
+    width: 100%;
+}
+
+footer>div>a {
+    margin: auto;
 }
 
 /* titolo */
@@ -133,7 +148,7 @@ footer > div > a {
     font-family: "eight-semi-condensed", sans-serif;
     font-weight: 200;
     font-style: normal;
-    font-size: clamp(3rem, 11vw, 100rem);
+    font-size: clamp(3rem, 9vw, 100rem);
     color: var(--nero-blu);
     margin-top: 0;
 }

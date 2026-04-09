@@ -81,7 +81,7 @@ app.get("/auth/google/callback", async (req, res) => {
   res.redirect(process.env.BASE_URL);
 });
 
-app.get("/api/user", (req, res) => {
+app.get("/api/user", async (req, res) => {
   console.log(req.session.user);
   if (!req.session.user) {
     return res.json(null);
