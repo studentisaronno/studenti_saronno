@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Studenti saronnesi</title>
-    <link rel="icon" type="image/x-icon" href="../imgs/Risorsa 8.png" />
+    <link rel="icon" type="image/x-icon" href="../imgs/Logo.svg" />
     <link rel="stylesheet" href="../css/appunti.css" />
     <!--FUTURA-->
     <link rel="stylesheet" href="https://use.typekit.net/cjq4cdm.css" />
@@ -15,11 +15,34 @@
     <script src="../js/header-footer.js"></script>
     <script src="../js/index.js"></script>
 
+
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@1/web/uc-file-uploader-regular.min.css">
 </head>
 
 <body style="margin: 0">
+
+    <div id="upload-form-container" class="upload-form-container" style="visibility: hidden;">
+
+        <form class="upload-form" id="custom-upload-form">
+
+            <button class="close-form-button" onclick="switchFormState()">
+            </button>
+
+            <input type="text" class="file-name-input" id="file-name" placeholder="File name">
+            <!-- <input type="text" class="filer-name-input" id="filter-name" placeholder="Filter"> -->
+
+            <div class="file-input-container">
+                <label for="file-input">
+                    <img src="../imgs/graffetta.png">
+                    <p>Upload File</p>
+                </label>
+                <input type="file" id="file-input" multiple accept=".pdf, image/*">
+            </div>
+
+            <button type="submit" class="upload-file-button" id="submit-button">Upload</button>
+        </form>
+    </div>
 
     <div id="header"></div>
 
@@ -31,22 +54,27 @@
         <a href="#" class="tab-attiva">Cerca</a>
         <a href="#" id="miei-appunti" onclick="getUserNotes()">Miei appunti</a>
         <a href="#" id="tutti-appunti" onclick="getAllNotes()">Tutti gli appunti</a>
+        <a href="#" id="carica-appunti" onclick="switchFormState()">Carica appunti</a>
     </div>
 
     <div class="appunti-div">
         <div class="appunti" id="lista-appunti">
 
-        </div> 
+        </div>
         <div class="appunti-utente"></div>
+
+    </div>
+
+    <div id="test-pdf-image" style="width: 20vw; height: 7.5vw; background-color: var(--chiarissimo);">
 
     </div>
 
     <div id="file-uploader">
         <uc-config ctx-name="my-uploader" source-list="local, camera, facebook, gdrive"
             cdn-cname="https://4jzuykndqt.ucarecd.net/" pubkey="5d17d1b4539b6db92808" confirm-upload="true"></uc-config>
-    
+
         <uc-file-uploader-regular id="file-uploader" ctx-name="my-uploader" class="uc-light"></uc-file-uploader-regular>
-    
+
         <uc-upload-ctx-provider ctx-name="my-uploader"></uc-upload-ctx-provider>
     </div>
 
@@ -58,38 +86,172 @@
 
 <script type="module">
 
-  import * as UC from 'https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@1/web/uc-file-uploader-regular.min.js';
-  UC.defineComponents(UC);
+    import { uploadFile } from 'https://esm.run/@uploadcare/upload-client';
+    import { jsPDF } from "https://esm.run/jspdf";
 
-  const ctxProvider = document.querySelector("uc-upload-ctx-provider");
+    const browseFile = document.getElementById("file-input");
 
-  ctxProvider.addEventListener("common-upload-success", (e) => {
-    console.log(
-      "Uploaded files URL list",
-      e.detail.successEntries.map((entry) => entry.cdnUrl)
-    );
+    let filesImg = false;
+    let filesPdf = false;
 
-    fetch("/upload/note", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            files: e.detail.successEntries.map((entry) => entry.cdnUrl),
-        }),
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            console.log("Success:", data);
-        })
-        .catch((error) => {
-            console.error("Error:", error);
+    //Reset form state
+    function resetForm() {
+        document.getElementById("submit-button").style.backgroundColor = "var(--medio)";
+        document.getElementById("custom-upload-form").reset();
+    }
+
+    //Check file types
+    browseFile.addEventListener('change', async (e) => {
+        const files = e.target.files;
+        filesImg = false;
+        filesPdf = false;
+        for (let i = 0; i < files.length; i++) {
+            if (files[i].type.includes("image")) {
+                filesImg = true;
+            }
+            if (files[i].type.includes("pdf")) {
+                filesPdf = true;
+            }
+        }
+
+        if (filesImg === filesPdf) {
+            alert("Non puoi caricare sia immagini che PDF");
+            resetForm();
+        }
+
+    });
+
+    //Convert file uploaded to Base64
+    function readFileAsBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
         });
+    }
+
+    // Get the Image object and its dimensions from a Base64 string
+    function getImageDimensions(base64String) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+
+            img.onload = () => {
+                resolve({
+                    imgElement: img,
+                    width: img.width,    // Original width in pixels
+                    height: img.height   // Original height in pixels
+                });
+            };
+
+            img.onerror = reject;
+            img.src = base64String;
+        });
+    }
+
+    const submit_btn = document.getElementById("submit-button");
+
+    //Upload files
+    submit_btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        console.log("Form submitted");
+
+        //Get file name and uploaded files
+        const fileInput = document.getElementById("file-input");
+        const fileName = document.getElementById("file-name").value;
+
+        let doc;
+        let pdf;
+
+        //Check if there are files uploaded
+        if (fileInput.files.length === 0) {
+            alert("Seleziona un file da caricare");
+            return;
+        }
+
+        if (filesImg) {
+
+            let orientation;
+
+            for (let i = 0; i < fileInput.files.length; i++) {
+
+                const imageData = await readFileAsBase64(fileInput.files[i]);
+                const { width, height } = await getImageDimensions(imageData);
+
+                orientation = width > height ? 'landscape' : 'portrait';
+
+                //If is the first page create pdf
+                if (i === 0) {
+                    doc = new jsPDF({
+                        unit: "px",
+                        orientation: orientation,
+                        format: [width, height]
+                    });
+                    //Else add a new page
+                } else {
+                    doc.addPage([width, height], orientation);
+                }
+                //Add image
+                doc.addImage(imageData, "JPEG", 0, 0, width, height, undefined, "FAST");
+            }
+
+            pdf = doc.output('blob');
+
+        } else {
+
+            if (fileInput.files.length > 1) {
+                alert("Puoi caricare un pdf alla volta");
+                return;
+            } else {
+                pdf = fileInput.files[0];
+            }
+
+        }
+
+        console.log("Uploading file:", pdf);
+
+        try {
+
+            document.getElementById("submit-button").style.backgroundColor = "gray";
+
+            const result = await uploadFile(pdf, {
+                publicKey: "5d17d1b4539b6db92808",
+                store: 'auto',
+                fileName: fileName
+            });
+
+            const formData = {
+                fileName: fileName,
+                fileUrl: "https://4jzuykndqt.ucarecd.net/" + result.uuid + "/"
+            }
+
+            console.log("Result:", result);
+
+            await fetch("/upload/note", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+
+            });
+
+            resetForm();
+            document.getElementById("upload-form-container").style.visibility = "hidden";
+
+            console.log("File uploaded successfully:", result.cdnUrl);
+        } catch (error) {
+            console.error("Error uploading file:", error);
+        }
     });
 
 
 
 </script>
-    <script src="../js/appunti.js"></script>
+<!--Script for get pdf-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="../js/appunti.js"></script>
+
 
 </html>

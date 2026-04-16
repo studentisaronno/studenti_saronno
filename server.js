@@ -106,19 +106,42 @@ async function syncUserToSupabase(googleId, email, name) {
   }
 }
 
-app.post("/upload/note", async (req, res) => {
-  const fileUrl = req.body.files;
 
-  console.log("Received file URL:", fileUrl[0]);
+// app.post("/upload/note", async (req, res) => {
+//   const fileUrls = req.body.files;
+
+//   console.log("Received file URL:", fileUrls);
+
+//   fileUrls.forEach(async fileUrl => {
+//     console.log("Processing file URL:", fileUrl);
+//     const { data, error } = await supabase
+//       .from("notes")
+//       .insert({ author_id: currentUser.id, content: fileUrl })
+//       .select();
+
+//     if (error) {
+//       console.error("Error saving note to Supabase:", error);
+//     }    
+//   });
+// });
+
+app.post("/upload/note", async (req, res) => {
+  const { fileName, fileUrl } = req.body;
+
+  console.log("Received file URL:", fileUrl);
 
   const { data, error } = await supabase
     .from("notes")
-    .insert({ author_id: currentUser.id, content: fileUrl })
+    .insert({ author_id: currentUser.id, title: fileName, content: fileUrl })
     .select();
 
   if (error) {
     console.error("Error saving note to Supabase:", error);
+  } else {
+    console.log("file uploaded to supabase");
   }
+
+  res.status(200).json({ message: "File uploaded successfully" });
 
 });
 
@@ -131,6 +154,8 @@ app.get("/get/notes", async (req, res) => {
     console.error("Error fetching notes from Supabase:", error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
+
+
 
   res.json(data);
 });

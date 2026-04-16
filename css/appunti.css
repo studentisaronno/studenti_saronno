@@ -1,14 +1,14 @@
 .appunti-div {
-    margin: 2rem;
-    margin-left: 10rem;
-    margin-right: 10rem;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+  margin: 2rem;
+  margin-left: 10rem;
+  margin-right: 10rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 .appunti-div h1 {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 .tabs-appunti {
@@ -21,9 +21,9 @@
 }
 
 .tabs-appunti a {
-  text-decoration: none;               
-  color: var(--nero-blu);               
-  font-family: "futura-pt", sans-serif; 
+  text-decoration: none;
+  color: var(--nero-blu);
+  font-family: "futura-pt", sans-serif;
   font-weight: 500;
   padding-bottom: 8px;
   transition: 0.2s ease;
@@ -34,10 +34,99 @@
 }
 
 .tabs-appunti a:hover {
-    transition: ease-in-out 0.3s;
-    color: var(--scurissimo);
+  transition: ease-in-out 0.3s;
+  color: var(--scurissimo);
 }
 
+.upload-form-container {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9998;
+  background-color: rgba(0, 0, 0, 0.2);
+  visibility: hidden;
+}
 
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  position: fixed !important;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: 25vw;
+  z-index: 9999;
+  background-color: var(--bianco);
+  border-radius: 8px;
+  padding: 2rem;
+  gap: 1rem;
+}
 
+.file-input-container {
+  display: flex;
+}
 
+.file-input-container > label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 5rem;
+  background-color: var(--chiarissimo);
+  width: 100%;
+  border: 2px dashed var(--scuro);
+  border-radius: 10px;
+}
+
+.file-input-container > label:hover {
+  cursor: pointer;
+}
+
+.file-input-container > input {
+  display: none;
+}
+
+.file-input-container img {
+  height: 25px;
+}
+
+.file-input-container p {
+  font-family: "futura-pt", sans-serif;
+  margin-left: 0.5rem;
+}
+
+.file-name-input {
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  border: 1px solid var(--scuro);
+  border-radius: 100px;
+  padding-left: 10px;
+  font-family: "futura-pt", sans-serif;
+  font-size: 1.25rem;
+  height: 2rem;
+}
+
+.upload-file-button {
+  margin-left: auto;
+  margin-right: auto;
+  height: 2rem;
+  width: 6rem;
+  border: 0px;
+  border-radius: 100px;
+  background-color: var(--medio);
+}
+
+.close-form-button {
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  border: none;
+}
+
+.close-form-button:hover {
+  cursor: pointer;
+}
