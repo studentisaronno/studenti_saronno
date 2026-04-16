@@ -16,6 +16,41 @@ body {
     background-color: var(--bianco);
 }
 
+/* Text Styles */
+
+.titolo {
+    font-family: "eight-semi-condensed", sans-serif;
+    font-weight: 200;
+    font-style: normal;
+    font-size: clamp(3rem, 9vw, 100rem);
+    color: var(--nero-blu);
+    margin-top: 0;
+}
+
+.testo {
+    font-family: "futura-pt", sans-serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: var(--nero-blu);
+    text-align: justify;
+}
+
+.header-link {
+    color: var(--nero-blu);
+    text-decoration: none;
+    font-family: "futura-pt", sans-serif;
+    font-weight: 500;
+    font-size: 1.2rem;
+}
+
+.notes-title {
+    color: var(--nero-blu);
+    text-decoration: none;
+    font-family: "futura-pt", sans-serif;
+    font-weight: 500;
+    font-size: 1.25rem;
+}
+
 /* Header */
 header {
     background-color: var(--bianco);
@@ -143,20 +178,5 @@ footer>div>a {
     margin: auto;
 }
 
-/* titolo */
-.titolo {
-    font-family: "eight-semi-condensed", sans-serif;
-    font-weight: 200;
-    font-style: normal;
-    font-size: clamp(3rem, 9vw, 100rem);
-    color: var(--nero-blu);
-    margin-top: 0;
-}
 
-.testo {
-    font-family: "futura-pt", sans-serif;
-    font-weight: 400;
-    font-size: 1.5rem;
-    color: var(--nero-blu);
-    text-align: justify;
-}
+

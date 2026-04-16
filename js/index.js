@@ -1,7 +1,7 @@
 // User data
 fetch("/api/user")
     .then((res) => res.json())
-    .then((user) => {
+    .then(async (user) => {
         if (user) {
             document.getElementById("user-img").src = user.picture;
         } else {

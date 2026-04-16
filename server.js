@@ -1,10 +1,6 @@
 import express from "express";
-import multer from "multer";
 import cors from "cors";
-import fs from "fs";
 import path from "path";
-import axios from "axios";
-import FormData from "form-data";
 import dotenv from "dotenv";
 import session from "express-session";
 import { createClient } from "@supabase/supabase-js";
@@ -12,155 +8,168 @@ import { createClient } from "@supabase/supabase-js";
 dotenv.config();
 
 const app = express();
+
 app.use(session({
-  secret: `${process.env.SESSION_SECRET}`,
-  resave: false,
-  saveUninitialized: false
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === "production", // HTTPS in produzione
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 giorni
+    }
 }));
+
 app.use(express.static(path.join(process.cwd(), ".")));
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: process.env.BASE_URL,
+    credentials: true // necessario per mandare i cookie di sessione
+}));
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(process.cwd(), "html", "index.html"));
-});
-
-app.get("/auth/google", (req, res) => {
-  const url =
-    "https://accounts.google.com/o/oauth2/v2/auth" +
-    `?client_id=${process.env.GOOGLE_CLIENT_ID}` +
-    `&redirect_uri=${process.env.BASE_URL}/auth/google/callback` +
-    "&response_type=code" +
-    "&scope=openid%20profile%20email";
-
-  res.redirect(url);
-});
-
-let currentUser = null;
-
-//Google authentication callback
-app.get("/auth/google/callback", async (req, res) => {
-  const code = req.query.code;
-
-  const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      code: code,
-      client_id: process.env.GOOGLE_CLIENT_ID,
-      client_secret: process.env.GOOGLE_CLIENT_SECRET,
-      redirect_uri: `${process.env.BASE_URL}/auth/google/callback`,
-      grant_type: "authorization_code",
-    }),
-  });
-
-  const tokenData = await tokenRes.json();
-
-  const accessToken = tokenData.access_token;
-
-  const userRes = await fetch(
-    "https://www.googleapis.com/oauth2/v2/userinfo",
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    },
-  );
-
-  const user = await userRes.json();
-
-  currentUser = user;
-
-  //Upload to supabase
-  await syncUserToSupabase(user.id, user.email, user.name);
-
-  req.session.user = user;
-
-  res.redirect(process.env.BASE_URL);
-});
-
-app.get("/api/user", async (req, res) => {
-  console.log(req.session.user);
-  if (!req.session.user) {
-    return res.json(null);
-  }
-  res.json(req.session.user);
-});
-
-
-
-//Create the supabase client
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SECRET_KEY);
 
-///Sync user to supabase
-async function syncUserToSupabase(googleId, email, name) {
-  const { data, error } = await supabase
-    .from("site_users")
-    .upsert({ google_id: googleId, email: email, display_name: name }, { onConflict: "google_id" })
-    .select();
-
-  if (error) {
-    console.error("Error syncing user to Supabase:", error);
-  }
+// ---- Middleware: controlla se l'utente è loggato ----
+function requireAuth(req, res, next) {
+    if (!req.session.user) {
+        return res.status(401).json({ error: "Non autenticato" });
+    }
+    next();
 }
 
-
-// app.post("/upload/note", async (req, res) => {
-//   const fileUrls = req.body.files;
-
-//   console.log("Received file URL:", fileUrls);
-
-//   fileUrls.forEach(async fileUrl => {
-//     console.log("Processing file URL:", fileUrl);
-//     const { data, error } = await supabase
-//       .from("notes")
-//       .insert({ author_id: currentUser.id, content: fileUrl })
-//       .select();
-
-//     if (error) {
-//       console.error("Error saving note to Supabase:", error);
-//     }    
-//   });
-// });
-
-app.post("/upload/note", async (req, res) => {
-  const { fileName, fileUrl } = req.body;
-
-  console.log("Received file URL:", fileUrl);
-
-  const { data, error } = await supabase
-    .from("notes")
-    .insert({ author_id: currentUser.id, title: fileName, content: fileUrl })
-    .select();
-
-  if (error) {
-    console.error("Error saving note to Supabase:", error);
-  } else {
-    console.log("file uploaded to supabase");
-  }
-
-  res.status(200).json({ message: "File uploaded successfully" });
-
+// ---- Routes statiche ----
+app.get("/", (req, res) => {
+    res.sendFile(path.join(process.cwd(), "html", "index.html"));
 });
 
+// ---- Google OAuth ----
+app.get("/auth/google", (req, res) => {
+    const url =
+        "https://accounts.google.com/o/oauth2/v2/auth" +
+        `?client_id=${process.env.GOOGLE_CLIENT_ID}` +
+        `&redirect_uri=${process.env.BASE_URL}/auth/google/callback` +
+        "&response_type=code" +
+        "&scope=openid%20profile%20email";
+    res.redirect(url);
+});
+
+app.get("/auth/google/callback", async (req, res) => {
+    try {
+        const code = req.query.code;
+
+        const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                code,
+                client_id: process.env.GOOGLE_CLIENT_ID,
+                client_secret: process.env.GOOGLE_CLIENT_SECRET,
+                redirect_uri: `${process.env.BASE_URL}/auth/google/callback`,
+                grant_type: "authorization_code",
+            }),
+        });
+
+        const tokenData = await tokenRes.json();
+
+        if (!tokenData.access_token) {
+            return res.status(400).send("Errore OAuth: token non ricevuto");
+        }
+
+        const userRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+            headers: { Authorization: `Bearer ${tokenData.access_token}` },
+        });
+
+        const user = await userRes.json();
+
+        await syncUserToSupabase(user.id, user.email, user.name);
+
+        req.session.user = user;
+
+        res.redirect(process.env.BASE_URL);
+    } catch (err) {
+        console.error("Errore callback OAuth:", err);
+        res.status(500).send("Errore durante il login");
+    }
+});
+
+app.get("/auth/logout", (req, res) => {
+    req.session.destroy(() => {
+        res.redirect(process.env.BASE_URL);
+    });
+});
+
+app.get("/api/user", (req, res) => {
+    res.json(req.session.user ?? null);
+});
+
+// ---- Supabase sync ----
+async function syncUserToSupabase(googleId, email, name) {
+    const { error } = await supabase
+        .from("site_users")
+        .upsert(
+            { google_id: googleId, email, display_name: name },
+            { onConflict: "google_id" }
+        );
+
+    if (error) console.error("Errore sync utente:", error);
+}
+
+// ---- Upload nota ----
+app.post("/upload/note", requireAuth, async (req, res) => {
+    const { fileName, fileUrl, thumbnailUrl } = req.body;
+
+    if (!fileName || !fileUrl) {
+        return res.status(400).json({ error: "fileName e fileUrl sono obbligatori" });
+    }
+
+    const { error } = await supabase
+        .from("notes")
+        .insert({
+            author_id: req.session.user.id,
+            title: fileName,
+            content: fileUrl,
+            thumbnail: thumbnailUrl
+        });
+
+    if (error) {
+        console.error("Errore salvataggio nota:", error);
+        return res.status(500).json({ error: "Errore salvataggio nota" });
+    }
+
+    res.status(200).json({ message: "Nota caricata con successo" });
+});
+
+// ---- Get tutte le note ----
 app.get("/get/notes", async (req, res) => {
-  const { data, error } = await supabase
-    .from("notes")
-    .select('*')
+    const { data, error } = await supabase
+        .from("notes")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-  if (error) {
-    console.error("Error fetching notes from Supabase:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
+    if (error) {
+        console.error("Errore fetch note:", error);
+        return res.status(500).json({ error: "Errore interno" });
+    }
 
+    res.json(data);
+});
 
+// ---- Get note dell'utente loggato ----
+app.get("/get/user/notes", requireAuth, async (req, res) => {
+    const { data, error } = await supabase
+        .from("notes")
+        .select("*")
+        .eq("author_id", req.session.user.id)
+        .order("created_at", { ascending: false });
 
-  res.json(data);
+    if (error) {
+        console.error("Errore fetch note utente:", error);
+        return res.status(500).json({ error: "Errore interno" });
+    }
+
+    res.json(data);
 });
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
 });

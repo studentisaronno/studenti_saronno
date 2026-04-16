@@ -46,82 +46,61 @@
 
     <div id="header"></div>
 
-    <div class="appunti-div">
+    <div class="titolo-div">
         <h1 class="titolo">Appunti</h1>
     </div>
 
-    <div class="tabs-appunti">
-        <a href="#" class="tab-attiva">Cerca</a>
+    <div class="tabs-appunti header-link">
         <a href="#" id="miei-appunti" onclick="getUserNotes()">Miei appunti</a>
         <a href="#" id="tutti-appunti" onclick="getAllNotes()">Tutti gli appunti</a>
         <a href="#" id="carica-appunti" onclick="switchFormState()">Carica appunti</a>
+        <div class="cerca-appunti-div">
+            <input type="text" id="search-notes-input" placeholder="Cerca appunti...">
+            <button onclick="searchNotes()">Cerca</button>
+        </div>
     </div>
 
     <div class="appunti-div">
-        <div class="appunti" id="lista-appunti">
+        <div class="lista-appunti-div" id="lista-appunti">
 
         </div>
         <div class="appunti-utente"></div>
 
     </div>
 
-    <div id="test-pdf-image" style="width: 20vw; height: 7.5vw; background-color: var(--chiarissimo);">
-
-    </div>
-
-    <div id="file-uploader">
-        <uc-config ctx-name="my-uploader" source-list="local, camera, facebook, gdrive"
-            cdn-cname="https://4jzuykndqt.ucarecd.net/" pubkey="5d17d1b4539b6db92808" confirm-upload="true"></uc-config>
-
-        <uc-file-uploader-regular id="file-uploader" ctx-name="my-uploader" class="uc-light"></uc-file-uploader-regular>
-
-        <uc-upload-ctx-provider ctx-name="my-uploader"></uc-upload-ctx-provider>
-    </div>
-
-
-
     <div id="footer"></div>
 
 </body>
 
 <script type="module">
-
     import { uploadFile } from 'https://esm.run/@uploadcare/upload-client';
     import { jsPDF } from "https://esm.run/jspdf";
 
     const browseFile = document.getElementById("file-input");
-
     let filesImg = false;
     let filesPdf = false;
 
-    //Reset form state
     function resetForm() {
         document.getElementById("submit-button").style.backgroundColor = "var(--medio)";
         document.getElementById("custom-upload-form").reset();
     }
 
-    //Check file types
     browseFile.addEventListener('change', async (e) => {
         const files = e.target.files;
         filesImg = false;
         filesPdf = false;
+
         for (let i = 0; i < files.length; i++) {
-            if (files[i].type.includes("image")) {
-                filesImg = true;
-            }
-            if (files[i].type.includes("pdf")) {
-                filesPdf = true;
-            }
+            if (files[i].type.includes("image")) filesImg = true;
+            if (files[i].type.includes("pdf")) filesPdf = true;
         }
 
-        if (filesImg === filesPdf) {
+        if (filesImg && filesPdf) {
             alert("Non puoi caricare sia immagini che PDF");
             resetForm();
         }
-
     });
 
-    //Convert file uploaded to Base64
     function readFileAsBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -131,123 +110,149 @@
         });
     }
 
-    // Get the Image object and its dimensions from a Base64 string
     function getImageDimensions(base64String) {
         return new Promise((resolve, reject) => {
             const img = new Image();
-
-            img.onload = () => {
-                resolve({
-                    imgElement: img,
-                    width: img.width,    // Original width in pixels
-                    height: img.height   // Original height in pixels
-                });
-            };
-
+            img.onload = () => resolve({ imgElement: img, width: img.width, height: img.height });
             img.onerror = reject;
             img.src = base64String;
         });
     }
 
+    // Genera thumbnail PNG dalla prima pagina del PDF
+    async function generatePdfThumbnail(pdfFile) {
+        const pdfjsLib = window['pdfjs-dist/build/pdf'];
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+            'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        const arrayBuffer = await pdfFile.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        const page = await pdf.getPage(1);
+
+        // Scala della thumbnail per avere immagine di larghezza 1000px
+        let scaleImg = 1000 / page.getViewport().viewBox[2];
+
+        // Scala più alta = thumbnail più nitida
+        const viewport = page.getViewport({ scale: scaleImg });
+
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({
+            canvasContext: canvas.getContext('2d'),
+            viewport
+        }).promise;
+
+        pdf.destroy();
+
+        // Converti canvas in Blob PNG
+        return new Promise(resolve => canvas.toBlob(resolve, 'image/jpg'));
+    }
+
+    // Carica un blob su Uploadcare e restituisce il cdnUrl
+    async function uploadToUploadcare(blob, fileName) {
+        const result = await uploadFile(blob, {
+            publicKey: "5d17d1b4539b6db92808",
+            store: 'auto',
+            fileName: fileName
+        });
+        return result;
+    }
+
     const submit_btn = document.getElementById("submit-button");
 
-    //Upload files
     submit_btn.addEventListener('click', async (e) => {
         e.preventDefault();
 
-        console.log("Form submitted");
-
-        //Get file name and uploaded files
         const fileInput = document.getElementById("file-input");
         const fileName = document.getElementById("file-name").value;
 
-        let doc;
-        let pdf;
-
-        //Check if there are files uploaded
         if (fileInput.files.length === 0) {
             alert("Seleziona un file da caricare");
             return;
         }
 
-        if (filesImg) {
-
-            let orientation;
-
-            for (let i = 0; i < fileInput.files.length; i++) {
-
-                const imageData = await readFileAsBase64(fileInput.files[i]);
-                const { width, height } = await getImageDimensions(imageData);
-
-                orientation = width > height ? 'landscape' : 'portrait';
-
-                //If is the first page create pdf
-                if (i === 0) {
-                    doc = new jsPDF({
-                        unit: "px",
-                        orientation: orientation,
-                        format: [width, height]
-                    });
-                    //Else add a new page
-                } else {
-                    doc.addPage([width, height], orientation);
-                }
-                //Add image
-                doc.addImage(imageData, "JPEG", 0, 0, width, height, undefined, "FAST");
-            }
-
-            pdf = doc.output('blob');
-
-        } else {
-
-            if (fileInput.files.length > 1) {
-                alert("Puoi caricare un pdf alla volta");
-                return;
-            } else {
-                pdf = fileInput.files[0];
-            }
-
+        if (!fileName) {
+            alert("Inserisci un nome per il file");
+            return;
         }
 
-        console.log("Uploading file:", pdf);
+        document.getElementById("submit-button").style.backgroundColor = "gray";
 
         try {
+            let pdfBlob;
+            let thumbnailBlob;
 
-            document.getElementById("submit-button").style.backgroundColor = "gray";
+            if (filesImg) {
+                // Converti immagini in PDF
+                let doc;
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    const imageData = await readFileAsBase64(fileInput.files[i]);
+                    const { width, height } = await getImageDimensions(imageData);
+                    const orientation = width > height ? 'landscape' : 'portrait';
 
-            const result = await uploadFile(pdf, {
+                    if (i === 0) {
+                        doc = new jsPDF({ unit: "px", orientation, format: [width, height] });
+                    } else {
+                        doc.addPage([width, height], orientation);
+                    }
+                    doc.addImage(imageData, "JPEG", 0, 0, width, height, undefined, "FAST");
+                }
+                pdfBlob = doc.output('blob');
+
+            } else {
+                if (fileInput.files.length > 1) {
+                    alert("Puoi caricare un PDF alla volta");
+                    document.getElementById("submit-button").style.backgroundColor = "var(--medio)";
+                    return;
+                }
+                pdfBlob = fileInput.files[0];
+            }
+
+            // Genera thumbnail prima di caricare
+            console.log("Generando thumbnail...");
+            thumbnailBlob = await generatePdfThumbnail(pdfBlob);
+
+            // Carica PDF e thumbnail in parallelo su Uploadcare
+            console.log("Caricamento su Uploadcare...");
+            const result = await uploadFile(pdfBlob, {
                 publicKey: "5d17d1b4539b6db92808",
                 store: 'auto',
                 fileName: fileName
             });
 
+            console.log("PDF URL:", result.uuid);
+            const resultThumbnail = await uploadFile(thumbnailBlob, {
+                publicKey: "5d17d1b4539b6db92808",
+                store: 'auto',
+                fileName: fileName + "_thumbnail.jpg"
+            });
+
+            console.log("Thumbnail URL:", resultThumbnail.uuid);
+
             const formData = {
                 fileName: fileName,
-                fileUrl: "https://4jzuykndqt.ucarecd.net/" + result.uuid + "/"
+                fileUrl: "https://4jzuykndqt.ucarecd.net/" + result.uuid + "/",
+                thumbnailUrl: "https://4jzuykndqt.ucarecd.net/" + resultThumbnail.uuid + "/"
             }
 
-            console.log("Result:", result);
-
+            // Salva entrambi gli URL nel backend
             await fetch("/upload/note", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData)
-
             });
 
             resetForm();
             document.getElementById("upload-form-container").style.visibility = "hidden";
+            console.log("Upload completato!");
 
-            console.log("File uploaded successfully:", result.cdnUrl);
         } catch (error) {
-            console.error("Error uploading file:", error);
+            console.error("Errore durante l'upload:", error);
+            document.getElementById("submit-button").style.backgroundColor = "var(--medio)";
         }
     });
-
-
-
 </script>
 <!--Script for get pdf-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>

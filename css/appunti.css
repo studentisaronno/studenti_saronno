@@ -1,4 +1,4 @@
-.appunti-div {
+.titolo-div {
   margin: 2rem;
   margin-left: 10rem;
   margin-right: 10rem;
@@ -7,7 +7,7 @@
   flex-direction: column;
 }
 
-.appunti-div h1 {
+.titolo-div h1 {
   margin-bottom: 1rem;
 }
 
@@ -15,17 +15,17 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  gap: 40px;
+  align-items: center;
+  gap: 3rem;
   padding: 15px 0;
   margin: 0;
 }
 
 .tabs-appunti a {
+  margin: 0;
   text-decoration: none;
   color: var(--nero-blu);
-  font-family: "futura-pt", sans-serif;
   font-weight: 500;
-  padding-bottom: 8px;
   transition: 0.2s ease;
 }
 
@@ -36,6 +36,37 @@
 .tabs-appunti a:hover {
   transition: ease-in-out 0.3s;
   color: var(--scurissimo);
+}
+
+.cerca-appunti-div {
+  display: flex;
+  width: 20rem;
+  align-items: center;
+  border: 1px solid var(--scuro);
+  height: 2rem;
+  border-radius: 100px;
+  padding: .25rem;
+  padding-left: 10px;
+  font-family: "futura-pt", sans-serif;
+  font-size: 1.25rem;
+}
+
+.cerca-appunti-div input {
+  width: 100%;
+  height: 100%;
+  background: none;
+  outline: none;
+  border: none;
+}
+
+.cerca-appunti-div button {
+  font-family: "futura-pt", sans-serif;
+  font-size: 1rem;
+  height: 2rem;
+  width: 6rem;
+  border: 0px;
+  border-radius: 100px;
+  background-color: var(--medio);
 }
 
 .upload-form-container {
@@ -66,7 +97,7 @@
   display: flex;
 }
 
-.file-input-container > label {
+.file-input-container>label {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -78,11 +109,11 @@
   border-radius: 10px;
 }
 
-.file-input-container > label:hover {
+.file-input-container>label:hover {
   cursor: pointer;
 }
 
-.file-input-container > input {
+.file-input-container>input {
   display: none;
 }
 
@@ -120,7 +151,8 @@
 .close-form-button {
   width: 20px;
   height: 20px;
-  background-color: red;
+  background-image: url(../imgs/close.png);
+  background-size: contain;
   position: absolute;
   top: 1rem;
   right: 1rem;
@@ -129,4 +161,42 @@
 
 .close-form-button:hover {
   cursor: pointer;
+}
+
+.appunti-div {
+  margin: 2rem;
+  margin-left: 10rem;
+  margin-right: 10rem;
+  display: flex;
+}
+
+.note-element-div {
+  display: flex;
+  flex-direction: column;
+  width: 13rem;
+  height: 18rem;
+  padding: 1rem;
+  padding-bottom: 0;
+  border-radius: calc(6px + 1rem);
+  background-color: var(--chiarissimo);
+}
+
+.note-element-div:hover {
+  cursor: pointer;
+}
+.note-element-div > h3 {
+  margin: auto;
+}
+
+.note-image-thumbnail {
+  border-radius: 6px;
+  width: 100%;
+  height: 80%;
+  object-fit: cover;
+}
+
+.lista-appunti-div {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
 }
