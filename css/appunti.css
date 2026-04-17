@@ -12,13 +12,20 @@
 }
 
 .tabs-appunti {
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 3rem;
   padding: 15px 0;
-  margin: 0;
+  position: sticky;
+  top: 1em;
+  background-color: inherit;
+  width: max-content;
+  margin: auto;
+  padding-inline: 1em;
+  border-radius: 1000px;
+  backdrop-filter: blur(10px);
+  background-color: #efefefaf;
 }
 
 .tabs-appunti a {
@@ -184,7 +191,8 @@
 .note-element-div:hover {
   cursor: pointer;
 }
-.note-element-div > h3 {
+
+.note-element-div>h3 {
   margin: auto;
 }
 
