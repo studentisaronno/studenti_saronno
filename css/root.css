@@ -9,6 +9,15 @@
     --chiarissimissimissimohover: #dbdbdb;
     --bianco: #efefef;
     --bianco-scuro: #e3e3e3;
+
+    /* nuova palette */
+    --petrolio: #005160;
+    --blu-oltremare: #252f61;
+    --blu-abisso: #0f4272;
+    --verde-smeraldo: #006e37;
+    --verde-pino: #007864;
+    --viola-blu-oltremare: #6b358b;
+    --viola-chiaro: #7c4594;
 }
 
 body {
@@ -48,13 +57,12 @@ body {
     text-decoration: none;
     font-family: "futura-pt", sans-serif;
     font-weight: 500;
-    font-size: 1.25rem;
+    font-size: 1rem;
 }
 
 /* Header */
 header {
     background-color: var(--bianco);
-    color: var(--chiarissimo);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -95,7 +103,7 @@ header {
 
 .header-right>nav>ul li a:hover {
     transition: ease-in-out 0.3s;
-    color: var(--scurissimo);
+    color: var(--blu-oltremare);
 }
 
 /* MENÙ A TENDINA */
@@ -108,10 +116,6 @@ header {
     cursor: pointer;
     color: var(--nero-blu);
     font-family: "futura-pt", sans-serif;
-}
-
-.dropdown-btn:hover {
-    color: var(--chiarissimissimohover);
 }
 
 .dropdown:hover .dropdown-menu {
@@ -146,7 +150,7 @@ header {
     transition: color 0.2 ease-in-out;
 
     a {
-        color: var(--scurissimo);
+        color: var(--blu-oltremare);
         transition: color 0.2 ease-in-out;
     }
 }

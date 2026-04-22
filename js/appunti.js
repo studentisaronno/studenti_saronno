@@ -26,15 +26,23 @@ async function createNoteElement(notesList, note) {
     noteElement.className = "note-element-div";
     noteElement.addEventListener("click", () => { open(note.content) });
 
+    let noteHeader = document.createElement("div");
+    noteHeader.className = "note-header";
+    noteElement.appendChild(noteHeader);
+
+    let noteTitle = document.createElement("p");
+    noteTitle.className = "notes-title";
+    noteTitle.textContent = note.title;
+    noteHeader.appendChild(noteTitle);
+
+    let noteSetting = document.createElement("div");
+    noteSetting.className = "note-setting";
+    noteHeader.appendChild(noteSetting);
+
     let thumbnailImg = document.createElement("img");
     thumbnailImg.src = note.thumbnail;
     thumbnailImg.className = "note-image-thumbnail";
-    noteElement.insertBefore(thumbnailImg, noteElement.firstChild);
-
-    let noteTitle = document.createElement("h3");
-    noteTitle.className = "notes-title";
-    noteTitle.textContent = note.title;
-    noteElement.appendChild(noteTitle);
+    noteElement.appendChild(thumbnailImg);
 
     notesList.appendChild(noteElement);
 }
@@ -57,6 +65,8 @@ function getAllNotes() {
         });
 
 }
+
+getAllNotes();
 
 //Display user notes
 function getUserNotes() {
@@ -102,3 +112,5 @@ searchNotesInput.addEventListener("input", async () => {
 
         });
 });
+
+//Dropdown menu for notes
