@@ -138,6 +138,62 @@ app.post("/upload/note", requireAuth, async (req, res) => {
     res.status(200).json({ message: "Nota caricata con successo" });
 });
 
+// ---- Upload evento ----
+app.post("/upload/event", requireAuth, async (req, res) => {
+    const { eventName, eventDescription, fileUrl, thumbnailUrl } = req.body;
+
+    if (!eventName || !fileUrl) {
+        return res.status(400).json({ error: "eventName e fileUrl sono obbligatori" });
+    }
+
+    console.log(req.body);
+
+    const { error } = await supabase
+        .from("events")
+        .insert({
+            author_id: req.session.user.id,
+            title: eventName,
+            content: eventDescription,
+            image: fileUrl,
+            thumbnail: thumbnailUrl
+        });
+
+    if (error) {
+        console.error("Errore salvataggio evento:", error);
+        return res.status(500).json({ error: "Errore salvataggio evento" });
+    }
+
+    res.status(200).json({ message: "Evento caricato con successo" });
+});
+
+// ---- Upload tutor ----
+app.post("/upload/tutor", requireAuth, async (req, res) => {
+    const { tutorName, tutorSurname, tutorEmail, tutorDescription, fileUrl, thumbnailUrl } = req.body;
+
+    if (!tutorName || !fileUrl) {
+        return res.status(400).json({ error: "tutorName e fileUrl sono obbligatori" });
+    }
+
+    const { error } = await supabase
+        .from("tutors")
+        .insert({
+            author_id: req.session.user.id,
+            name: tutorName,
+            surname: tutorSurname,
+            email: tutorEmail,
+            description: tutorDescription,
+            content: fileUrl,
+            thumbnail: thumbnailUrl
+        });
+
+    if (error) {
+        console.error("Errore salvataggio nota:", error);
+        return res.status(500).json({ error: "Errore salvataggio nota" });
+    }
+
+    res.status(200).json({ message: "Tutor caricato con successo" });
+});
+
 // ---- Get tutte le note ----
 app.get("/get/notes", async (req, res) => {
     const { data, error } = await supabase
@@ -153,10 +209,72 @@ app.get("/get/notes", async (req, res) => {
     res.json(data);
 });
 
+// ---- Get tutte gli eventi ----
+app.get("/get/events", async (req, res) => {
+    const { data, error } = await supabase
+        .from("events")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("Errore fetch note:", error);
+        return res.status(500).json({ error: "Errore interno" });
+    }
+
+    res.json(data);
+});
+
+// ---- Get tutte i tutor ----
+app.get("/get/tutors", async (req, res) => {
+    const { data, error } = await supabase
+        .from("tutors")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("Errore fetch note:", error);
+        return res.status(500).json({ error: "Errore interno" });
+    }
+
+    res.json(data);
+});
+
 // ---- Get note dell'utente loggato ----
 app.get("/get/user/notes", requireAuth, async (req, res) => {
     const { data, error } = await supabase
         .from("notes")
+        .select("*")
+        .eq("author_id", req.session.user.id)
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("Errore fetch note utente:", error);
+        return res.status(500).json({ error: "Errore interno" });
+    }
+
+    res.json(data);
+});
+
+// ---- Get eventi dell'utente loggato ----
+app.get("/get/user/events", requireAuth, async (req, res) => {
+    const { data, error } = await supabase
+        .from("events")
+        .select("*")
+        .eq("author_id", req.session.user.id)
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("Errore fetch note utente:", error);
+        return res.status(500).json({ error: "Errore interno" });
+    }
+
+    res.json(data);
+});
+
+// ---- Get eventi dell'utente loggato ----
+app.get("/get/user/tutors", requireAuth, async (req, res) => {
+    const { data, error } = await supabase
+        .from("tutors")
         .select("*")
         .eq("author_id", req.session.user.id)
         .order("created_at", { ascending: false });

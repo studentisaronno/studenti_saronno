@@ -20,6 +20,19 @@ function resetForm() {
     document.getElementById("custom-upload-form").reset();
 }
 
+//Select the current section
+function selectSection(sectionId) {
+
+    let sectionsID = ["miei-appunti", "tutti-appunti"];
+
+    for (let i = 0; i < sectionsID.length; i++) {
+        document.getElementById(sectionsID[i]).className = "";
+    }
+
+    let section = document.getElementById(sectionId);
+    section.className = "selected";
+}
+
 //Create the note element
 async function createNoteElement(notesList, note) {
     let noteElement = document.createElement("div");
@@ -31,7 +44,7 @@ async function createNoteElement(notesList, note) {
     noteElement.appendChild(noteHeader);
 
     let noteTitle = document.createElement("p");
-    noteTitle.className = "notes-title";
+    noteTitle.className = "notes-title-font";
     noteTitle.textContent = note.title;
     noteHeader.appendChild(noteTitle);
 
@@ -49,10 +62,12 @@ async function createNoteElement(notesList, note) {
 
 //Display All notes
 function getAllNotes() {
+
     let allNotes = null;
     fetch("/get/notes")
         .then((res) => res.json())
         .then(async (notes) => {
+
             allNotes = notes;
             console.log(allNotes);
 
@@ -64,16 +79,27 @@ function getAllNotes() {
 
         });
 
+    selectSection("tutti-appunti");
+
 }
 
 getAllNotes();
 
 //Display user notes
 function getUserNotes() {
+
+
     let userNotes = null;
     fetch("/get/user/notes")
         .then((res) => res.json())
         .then(async (notes) => {
+
+            if (notes.length === undefined) {
+                console.log(notes.error);
+                alert("Nessun accesso effettuato");
+                return;
+            }
+
             allNotes = notes;
             console.log(allNotes);
 
@@ -83,6 +109,7 @@ function getUserNotes() {
                 createNoteElement(notesList, note)
             };
 
+            selectSection("miei-appunti");
         });
 }
 
@@ -112,5 +139,3 @@ searchNotesInput.addEventListener("input", async () => {
 
         });
 });
-
-//Dropdown menu for notes

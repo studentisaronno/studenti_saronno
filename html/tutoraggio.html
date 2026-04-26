@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Studenti saronnesi</title>
     <link rel="icon" type="image/x-icon" href="../imgs/Logo.svg" />
-    <link rel="stylesheet" href="../css/bacheca.css" />
+    <link rel="stylesheet" href="../css/tutoraggio.css" />
     <!--Adobe fonts-->
     <link rel="stylesheet" href="https://use.typekit.net/cjq4cdm.css" />
     <link rel="stylesheet" href="../css/root.css" />
@@ -29,15 +29,17 @@
             <button class="close-form-button" onclick="switchFormState()">
             </button>
 
-            <input type="text" class="event-name-input" id="event-name" placeholder="Nome evento...">
+            <input type="text" class="tutor-name-input" id="tutor-name" placeholder="Nome">
+            <input type="text" class="tutor-name-input" id="tutor-surname" placeholder="Cognome">
+            <input type="email" class="tutor-name-input" id="tutor-email" placeholder="Email">
 
-            <textarea class="event-description-input" id="event-description"
-                placeholder="Descrizione evento..."></textarea>
+            <textarea class="tutor-description-input" id="tutor-description"
+                placeholder="La tua descrizione"></textarea>
 
             <div class="file-input-container">
                 <label for="file-input">
                     <img src="../imgs/graffetta.png">
-                    <p>Immagine Evento</p>
+                    <p>La tua foto</p>
                 </label>
                 <input type="file" id="file-input" multiple accept=".pdf, image/*">
             </div>
@@ -47,29 +49,30 @@
     </div>
 
     <div id="header"></div>
-    
+
     <main>
         <div class="titolo-div">
-            <h1 class="titolo-font">Bacheca</h1>
+            <h1 class="titolo-font">Tutor</h1>
         </div>
 
-        <div class="tabs-eventi header-link">
-            <a href="#" id="miei-eventi" onclick="getUserEvents()">Miei eventi</a>
-            <a href="#" id="tutti-eventi" onclick="getAllEvents()">Tutti gli eventi</a>
-            <a href="#" id="carica-eventi" onclick="switchFormState()">Carica eventi</a>
-            <div class="cerca-eventi-div">
-                <input type="text" id="search-events-input" placeholder="Cerca eventi...">
-                <button onclick="searchEvents()">Cerca</button>
+        <div class="tabs-tutor header-link">
+            <a href="#" id="miei-tutor" onclick="getUserTutors()">Io</a>
+            <a href="#" id="tutti-tutor" onclick="getAllTutors()">Tutti i tutor</a>
+            <a href="#" id="carica-tutor" onclick="switchFormState()">Carica tutor</a>
+            <div class="cerca-tutor-div">
+                <input type="text" id="search-tutors-input" placeholder="Cerca tutor...">
+                <button onclick="searchTutors()">Cerca</button>
             </div>
         </div>
 
-        <div class="eventi-div">
-            <div class="lista-eventi-div" id="lista-eventi">
+        <div class="tutor-div">
+            <div class="lista-tutor-div" id="lista-tutors">
 
             </div>
-            <div class="eventi-utente"></div>
+            <div class="tutor-utente"></div>
 
         </div>
+
     </main>
 
     <div id="footer"></div>
@@ -79,7 +82,7 @@
 <script type="module">
     import { uploadFile } from 'https://esm.run/@uploadcare/upload-client';
     import { jsPDF } from "https://esm.run/jspdf";
-    import "../js/bacheca.js";
+    import "../js/tutoraggio.js";
     const browseFile = document.getElementById("file-input");
     let filesImg = false;
     let filesPdf = false;
@@ -155,11 +158,11 @@
     }
 
     // Carica un blob su Uploadcare e restituisce il cdnUrl
-    async function uploadToUploadcare(blob, eventName) {
+    async function uploadToUploadcare(blob, tutorName) {
         const result = await uploadFile(blob, {
             publicKey: "5d17d1b4539b6db92808",
             store: 'auto',
-            fileName: eventName
+            fileName: tutorName
         });
         return result;
     }
@@ -170,16 +173,17 @@
         e.preventDefault();
 
         const fileInput = document.getElementById("file-input");
-        const eventName = document.getElementById("event-name").value;
-        const eventDescription = document.getElementById("event-description").value;
-
+        const tutorName = document.getElementById("tutor-name").value;
+        const tutorSurname = document.getElementById("tutor-surname").value;
+        const tutorEmail = document.getElementById("tutor-email").value;
+        const tutorDescription = document.getElementById("tutor-description").value;
 
         if (fileInput.files.length === 0) {
             alert("Seleziona un file da caricare");
             return;
         }
 
-        if (!eventName) {
+        if (!tutorName) {
             alert("Inserisci un nome per il file");
             return;
         }
@@ -225,27 +229,29 @@
             const result = await uploadFile(pdfBlob, {
                 publicKey: "5d17d1b4539b6db92808",
                 store: 'auto',
-                fileName: eventName
+                fileName: tutorName
             });
 
             console.log("PDF URL:", result.uuid);
             const resultThumbnail = await uploadFile(thumbnailBlob, {
                 publicKey: "5d17d1b4539b6db92808",
                 store: 'auto',
-                fileName: eventName + "_thumbnail.jpg"
+                fileName: tutorName + "_thumbnail.jpg"
             });
 
             console.log("Thumbnail URL:", resultThumbnail.uuid);
 
             const formData = {
-                eventName: eventName,
-                eventDescription: eventDescription,
+                tutorName: tutorName,
+                tutorSurname: tutorSurname,
+                tutorEmail: tutorEmail,
+                tutorDescription: tutorDescription,
                 fileUrl: "https://4jzuykndqt.ucarecd.net/" + result.uuid + "/",
                 thumbnailUrl: "https://4jzuykndqt.ucarecd.net/" + resultThumbnail.uuid + "/"
             }
 
             // Salva entrambi gli URL nel backend
-            await fetch("/upload/event", {
+            await fetch("/upload/tutor", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData)
@@ -254,7 +260,7 @@
             resetForm();
             document.getElementById("upload-form-container").style.visibility = "hidden";
             console.log("Upload completato!");
-            getAllEvents();
+            getAllTutors();
             updateCardsList();
 
         } catch (error) {
@@ -266,7 +272,7 @@
 
 <!--Script for get pdf-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="../js/bacheca.js"></script>
+<script src="../js/tutoraggio.js"></script>
 
 
 </html>

@@ -11,7 +11,7 @@
   margin-bottom: 1rem;
 }
 
-.tabs-appunti {
+.tabs-tutor {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,7 +28,7 @@
   background-color: #efefefaf;
 }
 
-.tabs-appunti a {
+.tabs-tutor a {
   margin: 0;
   text-decoration: none;
   color: var(--nero-blu);
@@ -36,7 +36,7 @@
   transition: 0.2s ease;
 }
 
-.tabs-appunti a:visited {
+.tabs-tutor a:visited {
   color: var(--nero-blu);
 }
 
@@ -47,12 +47,12 @@
   box-shadow: .1rem .1rem 0.5rem rgba(0, 0, 0, .1);
 }
 
-.tabs-appunti a:hover {
+.tabs-tutor a:hover {
   transition: ease-in-out 0.3s;
   color: var(--blu-oltremare);
 }
 
-.cerca-appunti-div {
+.cerca-tutor-div {
   display: flex;
   width: 20rem;
   align-items: center;
@@ -63,10 +63,9 @@
   padding-left: 10px;
   font-family: "helvetica-neue-lt-pro", sans-serif;
   font-size: 1.25rem;
-
 }
 
-.cerca-appunti-div input {
+.cerca-tutor-div input {
   width: 100%;
   height: 100%;
   background: none;
@@ -74,7 +73,7 @@
   border: none;
 }
 
-.cerca-appunti-div button {
+.cerca-tutor-div button {
   font-family: "helvetica-neue-lt-pro", sans-serif;
   font-size: 1rem;
   height: 2rem;
@@ -145,7 +144,7 @@
   margin-left: 0.5rem;
 }
 
-.file-name-input {
+.tutor-name-input {
   margin-left: auto;
   margin-right: auto;
   width: 80%;
@@ -155,6 +154,20 @@
   font-family: "helvetica-neue-lt-pro", sans-serif;
   font-size: 1.25rem;
   height: 2rem;
+}
+
+.tutor-description-input {
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  border: 1px solid var(--blu-oltremare);
+  border-radius: 1rem;
+  padding: 10px;
+  font-family: "helvetica-neue-lt-pro", sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  height: 10rem;
+  max-width: calc(100% - 20px);
 }
 
 .upload-file-button {
@@ -184,40 +197,45 @@
   cursor: pointer;
 }
 
-.appunti-div {
+.tutor-div {
   margin: 2rem;
   margin-left: 10vw;
   margin-right: 10vw;
   display: flex;
 }
 
-.note-element-div {
+.tutor-element-div {
   display: flex;
-  flex-direction: column;
-  width: 15rem;
-  height: 15rem;
-  padding: .5rem;
-  border-radius: calc(6px + .5rem);
-  /* wrong color */
+  flex-direction: row;
+  width: 100%;
+  height: 30rem;
+  padding: 1rem;
+  border-radius: calc(6px + 1rem);
   background-color:
     /* wrong color */
     var(--bianco-scuro);
   box-shadow: 0em 0em .5em rgba(0, 0, 0, 0.075);
 }
 
-.note-element-div:hover {
-  cursor: pointer;
+.tutor-text-div {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2rem;
+  width: 100%;
 }
 
-.note-element-div>p {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  width: 80%;
-  white-space: nowrap;
-  overflow: hidden;
+.tutor-text-div>p {
+  display: -webkit-box;
+  margin-top: 0;
+  margin-right: 4rem;
+  -webkit-box-orient: vertical;
+  scroll-behavior: auto;
+  overflow: auto;
+  text-overflow: ellipsis;
+  white-space: pre-wrap;
 }
 
-.note-header {
+.tutor-header {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -225,7 +243,15 @@
   height: 20%;
 }
 
-.note-setting {
+.tutor-header>p {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.tutor-setting {
   width: 20px;
   height: 20px;
   margin-left: auto;
@@ -234,16 +260,60 @@
   background-repeat: no-repeat;
 }
 
-.note-image-thumbnail {
+.dropdown-card {
+  margin-left: auto;
+  margin-right: 1rem;
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-card-btn {
+  width: 20px;
+  height: 20px;
+  background-image: url("../imgs/dots.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.dropdown-card-btn:hover {
+  cursor: pointer;
+}
+
+.dropdown-card-content {
+  display: none;
+  position: absolute;
+  padding-inline-start: 0;
+  background-color: var(--bianco);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
   border-radius: 6px;
-  width: 100%;
-  height: 80%;
+  padding: .3rem;
+  padding-top: .5rem;
+  translate: -80%;
+  overflow: hidden;
+}
+
+.dropdown-card-content li {
+  padding: .3rem .5rem;
+  border-radius: 2px;
+}
+
+.dropdown-card-content li:hover {
+  cursor: pointer;
+  background-color: var(--bianco-scuro);
+}
+
+.tutor-image-thumbnail {
+  border-radius: 6px;
+  width: 30rem;
+  height: 30rem;
   object-fit: cover;
 }
 
-.lista-appunti-div {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 16rem);
+.lista-tutor-div {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 2rem;
   width: 100%;

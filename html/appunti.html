@@ -7,7 +7,7 @@
     <title>Studenti saronnesi</title>
     <link rel="icon" type="image/x-icon" href="../imgs/Logo.svg" />
     <link rel="stylesheet" href="../css/appunti.css" />
-    <!--FUTURA-->
+    <!--Adobe fonts-->
     <link rel="stylesheet" href="https://use.typekit.net/cjq4cdm.css" />
     <link rel="stylesheet" href="../css/root.css" />
 
@@ -45,28 +45,30 @@
     </div>
 
     <div id="header"></div>
-
-    <div class="titolo-div">
-        <h1 class="titolo">Appunti</h1>
-    </div>
-
-    <div class="tabs-appunti header-link">
-        <a href="#" id="miei-appunti" onclick="getUserNotes()">Miei appunti</a>
-        <a href="#" id="tutti-appunti" onclick="getAllNotes()">Tutti gli appunti</a>
-        <a href="#" id="carica-appunti" onclick="switchFormState()">Carica appunti</a>
-        <div class="cerca-appunti-div">
-            <input type="text" id="search-notes-input" placeholder="Cerca appunti...">
-            <button onclick="searchNotes()">Cerca</button>
+    
+    <main>
+        <div class="titolo-div">
+            <h1 class="titolo-font">Appunti</h1>
         </div>
-    </div>
 
-    <div class="appunti-div">
-        <div class="lista-appunti-div" id="lista-appunti">
+        <div class="tabs-appunti header-link">
+            <a href="#" id="miei-appunti" onclick="getUserNotes()">Miei appunti</a>
+            <a href="#" id="tutti-appunti" onclick="getAllNotes()">Tutti gli appunti</a>
+            <a href="#" id="carica-appunti" onclick="switchFormState()">Carica appunti</a>
+            <div class="cerca-appunti-div">
+                <input type="text" id="search-notes-input" placeholder="Cerca appunti...">
+                <button onclick="searchNotes()">Cerca</button>
+            </div>
+        </div>
+
+        <div class="appunti-div">
+            <div class="lista-appunti-div" id="lista-appunti">
+
+            </div>
+            <div class="appunti-utente"></div>
 
         </div>
-        <div class="appunti-utente"></div>
-
-    </div>
+    </main>
 
     <div id="footer"></div>
 
@@ -75,6 +77,7 @@
 <script type="module">
     import { uploadFile } from 'https://esm.run/@uploadcare/upload-client';
     import { jsPDF } from "https://esm.run/jspdf";
+    import "../js/appunti.js"
 
     const browseFile = document.getElementById("file-input");
     let filesImg = false;
@@ -247,6 +250,7 @@
             resetForm();
             document.getElementById("upload-form-container").style.visibility = "hidden";
             console.log("Upload completato!");
+            getAllNotes();
 
         } catch (error) {
             console.error("Errore durante l'upload:", error);

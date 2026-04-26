@@ -21,13 +21,19 @@
 }
 
 body {
+    display: flex;
+    flex-direction: column;
     margin: 0;
     background-color: var(--bianco);
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
 }
 
 /* Text Styles */
-
-.titolo {
+.titolo-font {
     font-family: "eight-semi-condensed", sans-serif;
     font-weight: 200;
     font-style: normal;
@@ -36,9 +42,9 @@ body {
     margin-top: 0;
 }
 
-.testo {
-    font-family: "futura-pt", sans-serif;
-    font-weight: 400;
+.testo-font {
+    font-family: "helvetica-neue-lt-pro", sans-serif;
+    font-weight: 300;
     font-size: 1.5rem;
     color: var(--nero-blu);
     text-align: justify;
@@ -47,17 +53,57 @@ body {
 .header-link {
     color: var(--nero-blu);
     text-decoration: none;
-    font-family: "futura-pt", sans-serif;
-    font-weight: 500;
+    font-family: "helvetica-neue-lt-pro", sans-serif;
+    font-weight: 400;
     font-size: 1.2rem;
 }
 
-.notes-title {
+.notes-title-font {
     color: var(--nero-blu);
     text-decoration: none;
-    font-family: "futura-pt", sans-serif;
-    font-weight: 500;
+    font-family: "helvetica-neue-lt-pro", sans-serif;
+    font-weight: 400;
     font-size: 1rem;
+}
+
+.event-title-font {
+    color: var(--nero-blu);
+    text-decoration: none;
+    font-family: "helvetica-neue-lt-pro", sans-serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+}
+
+.event-description-font {
+    color: var(--nero-blu);
+    text-decoration: none;
+    font-family: "helvetica-neue-lt-pro", sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+}
+
+.tutor-title-font {
+    color: var(--nero-blu);
+    text-decoration: none;
+    font-family: "helvetica-neue-lt-pro", sans-serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+}
+
+.tutor-description-font {
+    color: var(--nero-blu);
+    text-decoration: none;
+    font-family: "helvetica-neue-lt-pro", sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+}
+
+.card-dropdown-option-font {
+    color: var(--nero-blu);
+    text-decoration: none;
+    font-family: "helvetica-neue-lt-pro", sans-serif;
+    font-weight: 400;
+    font-size: 1.1rem;
 }
 
 /* Header */
@@ -94,10 +140,13 @@ header {
 }
 
 .header-right>nav>ul li a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: var(--nero-blu);
     text-decoration: none;
-    font-family: "futura-pt", sans-serif;
-    font-weight: 500;
+    font-family: "helvetica-neue-lt-pro", sans-serif;
+    font-weight: 400;
     font-size: 1.2rem;
 }
 
@@ -115,7 +164,7 @@ header {
 .dropdown-btn {
     cursor: pointer;
     color: var(--nero-blu);
-    font-family: "futura-pt", sans-serif;
+    font-family: "helvetica-neue-lt-pro", sans-serif;
 }
 
 .dropdown:hover .dropdown-menu {
@@ -137,7 +186,7 @@ header {
 
 .dropdown-menu li {
     padding: 12px 16px;
-    border-radius: 3px;
+    border-radius: 4px;
     transition: color 0.2 ease-in-out;
 }
 
@@ -156,6 +205,12 @@ header {
 }
 
 /* Footer */
+#footer {
+    display: flex;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
 footer {
     width: 80vw;
     height: 2em;
@@ -166,10 +221,12 @@ footer {
     align-items: flex-start;
     justify-content: center;
     background-color: var(--bianco);
-    font-family: "futura-pt", sans-serif;
+    font-family: "helvetica-neue-lt-pro", sans-serif;
     font-weight: 300;
     margin: auto;
     margin-bottom: 2em;
+    left: 0;
+    bottom: 0;
 }
 
 footer>div {
