@@ -35,6 +35,10 @@ function selectSection(sectionId) {
 
 //Create the note element
 async function createNoteElement(notesList, note) {
+
+
+    
+
     let noteElement = document.createElement("div");
     noteElement.className = "note-element-div";
     noteElement.addEventListener("click", () => { open(note.content) });

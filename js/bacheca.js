@@ -173,12 +173,14 @@ searchEventsInput.addEventListener("input", async () => {
 
     console.log(searchText);
 
+    const currentUser = await (await fetch("/api/user")).json();
+
     let eventsList = document.getElementById("lista-eventi");
     eventsList.innerHTML = ""; // Clear existing events
     for (const event of allEvents) {
         console.log(event);
         if (event.title.toLowerCase().includes(searchText)) {
-            createEventElement(eventsList, event)
+            createEventElement(eventsList, event, currentUser)
         }
     };
 });

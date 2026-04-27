@@ -81,6 +81,7 @@
   border: 0px;
   border-radius: 100px;
   background-color: var(--bianco-scuro);
+  color: var(--nero-blu);
   box-shadow: .1em .1em .1em rgba(0, 0, 0, 0.15);
 }
 

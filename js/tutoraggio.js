@@ -45,17 +45,18 @@ async function createTutorElement(tutorsList, tutor, currentUser) {
     tutorElement.dataset.userId = tutor.id;
     //tutorElement.addEventListener("click", () => { open(tutor.content) });
 
-    let userFunctionsHTML;
+    let userFunctionsHTML = ``;
 
-    if (currentUser.id === tutor.author_id) {
-        userFunctionsHTML = `
+    if (currentUser !== null) {
+        if (currentUser.id === tutor.author_id) {
+            userFunctionsHTML = `
             <li><a href="#" class="card-dropdown-option-font">Modifica</a></li>
             <li><a href="#" class="card-dropdown-option-font">Elimina</a></li>
         `;
-    } else {
-        userFunctionsHTML = ``;
+        } else {
+            userFunctionsHTML = ``;
+        }
     }
-
     let tutorHTML = `
         <img src="${tutor.thumbnail}" class="tutor-image-thumbnail">
         <div class="tutor-text-div">
@@ -98,7 +99,7 @@ function selectSection(sectionId) {
 async function getAllTutors() {
 
     let allTutors = [];
-    const currentUser = await(await fetch("/api/user")).json();
+    const currentUser = await (await fetch("/api/user")).json();
 
     fetch("/get/tutors")
         .then((res) => res.json())
@@ -122,7 +123,7 @@ getAllTutors();
 
 //Display user tutors
 async function getUserTutors() {
-    const currentUser = await(await fetch("/api/user")).json();
+    const currentUser = await (await fetch("/api/user")).json();
 
     let userEvents = null;
     fetch("/get/user/tutors")
@@ -156,7 +157,7 @@ let searchEventsInput = document.getElementById("search-tutors-input");
 searchEventsInput.addEventListener("input", async () => {
     const searchText = document.getElementById("search-tutors-input").value.toLowerCase();
 
-    const currentUser = await(await fetch("/api/user")).json();
+    const currentUser = await (await fetch("/api/user")).json();
 
     console.log(searchText);
 
