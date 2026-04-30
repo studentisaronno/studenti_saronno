@@ -57,17 +57,21 @@
                         <a href="/auth/google">
                             <img id="user-img" width="30px" height="30px" src="" />
                         </a>
-                        <!-- <ul class="dropdown-menu" style="translate: -4rem;">
-                        <li>
+                        <ul class="dropdown-menu" style="translate: -4rem;">
+                            <!-- <li>
                             <a href="miei-appunti.html">Appunti</a>
                         </li>
                         <li>
                             <a href="impostazioni-utente.html">Impostazioni</a>
-                        </li>
-                        <li>
-                            <a href="/auth/google">Login</a>
-                        </li>
-                    </ul> -->
+                        </li> -->
+                            <li>
+                                <a href="/auth/google">Login</a>
+                            </li>
+                            <li>
+                                <a href="/auth/logout">Logout</a>
+
+                            </li>
+                        </ul>
                     </li>
 
 
@@ -95,3 +99,8 @@
 </body>
 
 </html>
+
+<script>
+    const user = await (await fetch("/auth/user")).json();
+    console.log("User:", user);
+</script>

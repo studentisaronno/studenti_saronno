@@ -55,7 +55,7 @@ async function createEventElement(eventsList, event, currentUser) {
             `;
             loggedFunctionsHTML = `
                 <div class="dropdown-card">
-                    <div class="dropdown-card-btn" onclick="toggleCardDropdown(this)"></div>
+                    <div class="dropdown-card-btn"></div>
                     <div class="dropdown-card-content">
                         <li><a href="#" class="card-dropdown-option-font">Salva</a></li>
                 ${userFunctionsHTML}
@@ -64,7 +64,7 @@ async function createEventElement(eventsList, event, currentUser) {
         } else {
             loggedFunctionsHTML = `
                 <div class="dropdown-card">
-                    <div class="dropdown-card-btn" onclick="toggleCardDropdown(this)"></div>
+                    <div class="dropdown-card-btn"></div>
                     <div class="dropdown-card-content">
                         <li><a href="#" class="card-dropdown-option-font">Salva</a></li>
                 </div>

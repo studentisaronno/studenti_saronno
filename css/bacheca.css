@@ -275,6 +275,10 @@
   background-repeat: no-repeat;
 }
 
+.dropdown-card-btn:hover .dropdown-card-content {
+  display: block;
+}
+
 .dropdown-card-btn:hover {
   cursor: pointer;
 }

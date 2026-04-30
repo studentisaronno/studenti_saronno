@@ -1,5 +1,15 @@
 //Switch form visibility
-function switchFormState() {
+async function switchFormState() {
+
+    const tutors = await fetch("/api/user");
+
+    console.log(tutors)
+
+    if (tutors !== null) {
+        alert("Hai già caricato un tutor");
+        return;
+    }
+
     if (document.getElementById("upload-form-container").style.visibility == "hidden") {
         document.getElementById("upload-form-container").style.visibility = "visible";
     } else {

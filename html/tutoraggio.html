@@ -172,6 +172,18 @@
     submit_btn.addEventListener('click', async (e) => {
         e.preventDefault();
 
+        fetch("api/user")
+            .then((res) => res.json())
+            .then((user) => {
+                console.log("User:", user);
+            });
+
+        fetch("get/user/tutors")
+            .then((res) => res.json())
+            .then((tutors) => {
+                console.log("Tutors:", tutors);
+            });
+
         const fileInput = document.getElementById("file-input");
         const tutorName = document.getElementById("tutor-name").value;
         const tutorSurname = document.getElementById("tutor-surname").value;

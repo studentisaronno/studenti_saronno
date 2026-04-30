@@ -34,14 +34,52 @@ function selectSection(sectionId) {
 }
 
 //Create the note element
-async function createNoteElement(notesList, note) {
-
-
-    
+async function createNoteElement(notesList, note, currentUser) {
 
     let noteElement = document.createElement("div");
     noteElement.className = "note-element-div";
-    noteElement.addEventListener("click", () => { open(note.content) });
+    noteElement.dataset.userId = note.id;
+    // noteElement.addEventListener("click", () => { open(note.content) });
+
+
+    let userFunctionsHTML = ``;
+    let loggedFunctionsHTML = ``;
+
+    try {
+        if (currentUser.id === note.author_id) {
+            userFunctionsHTML = `
+                <li><a href="#" class="card-dropdown-option-font">Modifica</a></li>
+                <li><a href="#" class="card-dropdown-option-font">Elimina</a></li>
+            `;
+            loggedFunctionsHTML = `
+                <div class="dropdown-card">
+                    <div class="dropdown-card-btn" onclick="toggleCardDropdown(this)"></div>
+                    <div class="dropdown-card-content">
+                        <li><a href="#" class="card-dropdown-option-font">Salva</a></li>
+                ${userFunctionsHTML}
+                </div>
+                </div>`;
+        } else {
+            loggedFunctionsHTML = `
+                <div class="dropdown-card">
+                    <div class="dropdown-card-btn" onclick="toggleCardDropdown(this)"></div>
+                    <div class="dropdown-card-content">
+                        <li><a href="#" class="card-dropdown-option-font">Salva</a></li>
+                </div>
+                </div>`;
+        }
+    } catch (error) {
+        console.log("Error fetching current user", error);
+    }
+
+    let eventHTML = `
+        <div class="note-header">
+            <p class="notes-title-font">${note.title}</p>
+            <div class="note-setting">
+        </div>
+        
+
+    `;
 
     let noteHeader = document.createElement("div");
     noteHeader.className = "note-header";
