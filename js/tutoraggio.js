@@ -5,7 +5,7 @@ async function switchFormState() {
 
     console.log(tutors)
 
-    if (tutors !== null) {
+    if (tutors === null) {
         alert("Hai già caricato un tutor");
         return;
     }
